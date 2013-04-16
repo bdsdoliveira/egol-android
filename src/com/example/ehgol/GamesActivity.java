@@ -1,6 +1,7 @@
 package com.example.ehgol;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -17,34 +18,39 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class GamesActivity extends Activity {
-	private String game_date;
+	private String CONTROL = "nothing...";
 	private String get_url = "http://192.168.0.12:3000/games";
-
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_games);
-        
-        Button get_btn = (Button) findViewById(R.id.games_getbutton);
-        get_btn.setOnClickListener(new View.OnClickListener() {
+
+        Button b = (Button) findViewById(R.id.games_button);
+        b.setOnClickListener(new View.OnClickListener() {
         	@Override
         	public void onClick(View v) {
         		GetGamesTask g = new GetGamesTask();
-        		JSONObject games_json = null;
-				try {
-					games_json = new JSONObject(g.execute().get().toString());
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+//        		JSONObject games_json = null;
         		TextView t = (TextView) findViewById(R.id.games_text);
+        		try {
+        			t.setText(g.execute().get());
+        		} catch (Exception e) {
+        			e.printStackTrace();
+        		}
+//				try {
+//					games_json = new JSONObject(g.execute().get().toString());
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
         		//for(String info : games_json.names()) {
-        			t.append(games_json.toString() + "\n");
+//        			t.append(games_json.toString() + "...\n");
         		//}
         	}
         });
     }
 
-    private class GetGamesTask extends AsyncTask<String, Void, HttpEntity> {
+    private class GetGamesTask extends AsyncTask<String, Void, String> {
     	private ProgressDialog p = new ProgressDialog(GamesActivity.this);
     	
     	@Override
@@ -56,19 +62,21 @@ public class GamesActivity extends Activity {
 		}
 		
 		@Override
-		protected HttpEntity doInBackground(String... s) {
+		protected String doInBackground(String... s) {
 			try {
 				HttpClient client = new DefaultHttpClient();
 				HttpGet get = new HttpGet(get_url);
-				HttpEntity entity = client.execute(get).getEntity();
-				return entity;
+				get.setHeader("Content-Type", "application/json");
+				HttpResponse response = client.execute(get);
+				HttpEntity entity = response.getEntity();
+				return entity.getContent().toString();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			return null;
 		}
 		
-		protected void onPostExecute(Void v) {
+		protected void onPostExecute(String s) {
 			p.dismiss();
 			Toast.makeText(getApplicationContext(), "Games loaded.", Toast.LENGTH_SHORT).show();
 		}
