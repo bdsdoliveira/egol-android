@@ -4,7 +4,8 @@
     <string name="app_name">É Gol!</string>
     
     <string name="action_settings">Settings</string>
-    <string name="games_search">Search for teams and places</string>
+    <string name="action_reload">Reload</string>
+    <string name="action_search">Search for teams and places</string>
     
     <string name="comment_button">Post a comment</string>
 

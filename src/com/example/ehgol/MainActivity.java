@@ -19,6 +19,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -26,8 +27,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class GamesActivity extends Activity {
-	private final String GET_URL = "http://192.168.0.12:3000/games";
+public class MainActivity extends Activity {
+	private final String GET_URL = "http://192.168.1.124:3000/games";
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,9 +41,10 @@ public class GamesActivity extends Activity {
     
     
     private class GetGamesTask extends AsyncTask<String, Void, Void> {
-    	private ProgressDialog p = new ProgressDialog(GamesActivity.this);
+    	private ProgressDialog p = new ProgressDialog(MainActivity.this);
 		StringBuilder sb = new StringBuilder();
 		JSONArray array;
+		int status;
 		
     	@Override
     	protected void onPreExecute() {
@@ -58,15 +60,18 @@ public class GamesActivity extends Activity {
 				HttpClient client = new DefaultHttpClient();
 				HttpGet get = new HttpGet(GET_URL);
 				get.setHeader("Accept", "application/json");
-//				HttpConnectionParams.setConnectionTimeout(client.getParams(), 2000);
-//				HttpConnectionParams.setSoTimeout(client.getParams(), 5000);
+//				HttpConnectionParams.setConnectionTimeout(client.getParams(), 5000);
+//				HttpConnectionParams.setSoTimeout(client.getParams(), 10000);
 				HttpResponse response = client.execute(get);
 				HttpEntity entity = response.getEntity();
+				status = response.getStatusLine().getStatusCode();
 				
-				BufferedReader br = new BufferedReader(new InputStreamReader(entity.getContent()));
-				String str = null;
-				while ((str = br.readLine()) != null) sb.append(str);
-				array = new JSONArray(sb.toString());
+				if (status == 200) {
+					BufferedReader b = new BufferedReader(new InputStreamReader(entity.getContent()));
+					String str = null;
+					while ((str = b.readLine()) != null) sb.append(str);
+					array = new JSONArray(sb.toString());
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -76,10 +81,11 @@ public class GamesActivity extends Activity {
 		protected void onPostExecute(Void v) {
 			p.dismiss();
 
-	        ListView games_list = (ListView) findViewById(R.id.games_list);
-			games_list.setAdapter(new GamesListAdapter(array, GamesActivity.this));
-			
-			Toast.makeText(getApplicationContext(), "Games loaded.", Toast.LENGTH_SHORT).show();
+			if (array != null) {
+		        ListView games_list = (ListView) findViewById(R.id.games_list);
+				games_list.setAdapter(new GamesListAdapter(array, MainActivity.this));
+				Toast.makeText(getApplicationContext(), "Games loaded.", Toast.LENGTH_SHORT).show();
+			} else Toast.makeText(getApplicationContext(), "Failed: error " + status, Toast.LENGTH_SHORT).show();
 		}
     }
     
@@ -143,13 +149,28 @@ public class GamesActivity extends Activity {
 		}
     }
     
-    
-    
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.games, menu);
         return true;
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	switch (item.getItemId()) {
+    	case R.id.action_reload:
+    		GetGamesTask getGames = new GetGamesTask();
+    		getGames.execute();
+    		break;
+    	case R.id.action_settings:
+    		Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show();
+    		break;
+
+      default:
+        break;
+      }
+      return true;
+    } 
     
 }
