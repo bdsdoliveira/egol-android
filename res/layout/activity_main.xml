@@ -3,24 +3,34 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="12dp"
+    android:paddingBottom="0dp"
     tools:context=".MainActivity" >
     
     <TextView android:id="@+id/games_search"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="12dp"
-        android:padding="10dp"
+        android:layout_marginBottom="6dp"
         android:text="@string/games_search"
         android:textColor="#bbb"
         android:textSize="18sp"
         android:textIsSelectable="true" />
     
+    <fragment android:id="@+id/games_map"
+        android:name="com.google.android.gms.maps.MapFragment"
+        android:layout_width="fill_parent"
+    	android:layout_height="240dp"
+        android:layout_marginBottom="6dp"
+        android:layout_below="@id/games_search"
+        android:clickable="true" />
+        
     <ListView android:id="@+id/games_list"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@id/games_search"
-        android:layout_margin="12dp"
+        android:layout_below="@id/games_map"
+        android:layout_marginTop="6dp"
         android:layout_marginBottom="0dp"
         android:divider="@android:color/transparent"
   		android:dividerHeight="10dp" />
+    
 </RelativeLayout>

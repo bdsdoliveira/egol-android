@@ -1,4 +1,4 @@
-package com.example.ehgol;
+package com.android.ehgol;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -28,9 +28,10 @@ import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.android.ehgol.R;
 
 public class MainActivity extends Activity implements OnQueryTextListener {
-	private final String GET_URL = "http://192.168.1.124:3000/games";
+	private final String GET_URL = "http://192.168.0.12:3000/games";
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
