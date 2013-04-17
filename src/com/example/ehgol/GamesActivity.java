@@ -27,29 +27,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class GamesActivity extends Activity {
-	private String get_url = "http://192.168.0.12:3000/games";
+	private final String GET_URL = "http://192.168.0.12:3000/games";
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ListView games_list = (ListView) findViewById(R.id.games_list);
-        
-        try {
-			GetGamesTask getGames = new GetGamesTask();
-			JSONArray json_array = new JSONArray(getGames.execute().get());
-			games_list.setAdapter(new GamesListAdapter(json_array, this));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-        
+		GetGamesTask getGames = new GetGamesTask();
+		getGames.execute();
     }
     
     
-    private class GetGamesTask extends AsyncTask<String, Void, String> {
+    private class GetGamesTask extends AsyncTask<String, Void, Void> {
     	private ProgressDialog p = new ProgressDialog(GamesActivity.this);
-    	
+		StringBuilder sb = new StringBuilder();
+		JSONArray array;
+		
     	@Override
     	protected void onPreExecute() {
 			p.setCancelable(false);
@@ -59,27 +53,32 @@ public class GamesActivity extends Activity {
 		}
 		
 		@Override
-		protected String doInBackground(String... s) {
+		protected Void doInBackground(String... s) {
 			try {
 				HttpClient client = new DefaultHttpClient();
-				HttpGet get = new HttpGet(get_url);
+				HttpGet get = new HttpGet(GET_URL);
 				get.setHeader("Accept", "application/json");
+//				HttpConnectionParams.setConnectionTimeout(client.getParams(), 2000);
+//				HttpConnectionParams.setSoTimeout(client.getParams(), 5000);
 				HttpResponse response = client.execute(get);
 				HttpEntity entity = response.getEntity();
 				
-				StringBuilder sb = new StringBuilder();
 				BufferedReader br = new BufferedReader(new InputStreamReader(entity.getContent()));
 				String str = null;
 				while ((str = br.readLine()) != null) sb.append(str);
-				return sb.toString();
+				array = new JSONArray(sb.toString());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			return null;
 		}
 		
-		protected void onPostExecute(String s) {
+		protected void onPostExecute(Void v) {
 			p.dismiss();
+
+	        ListView games_list = (ListView) findViewById(R.id.games_list);
+			games_list.setAdapter(new GamesListAdapter(array, GamesActivity.this));
+			
 			Toast.makeText(getApplicationContext(), "Games loaded.", Toast.LENGTH_SHORT).show();
 		}
     }
@@ -117,25 +116,30 @@ public class GamesActivity extends Activity {
 		
 		@Override
 		public View getView(int i, View view, ViewGroup parent) {
-			View v = view;
-			
-			if (v == null) {
-				LayoutInflater l = (LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				v = l.inflate(R.layout.list_item, null);
-			}
-
-			TextView t = (TextView) v.findViewById(R.id.list_item_text);
 			try {
-			t.setText(json.getJSONObject(i).getString("team1").toString() +
-					" vs " +
-					json.getJSONObject(i).getString("team2").toString() +
-					"\nLocal: " +
-					json.getJSONObject(i).getString("city").toString() +
-					", " +
-					json.getJSONObject(i).getString("stadium").toString());;
+				View v = view;
+				JSONObject object = json.getJSONObject(i);
+				String team1 = object.getString("team1").toString();
+				String team2 = object.getString("team2").toString();
+				String city = object.getString("city").toString();
+				String stadium = object.getString("stadium").toString();
+				
+				if (v == null) {
+					LayoutInflater l = (LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+					v = l.inflate(R.layout.list_item, null);
+				}
+	
+				TextView tT = (TextView) v.findViewById(R.id.list_item_teams);
+				TextView tP = (TextView) v.findViewById(R.id.list_item_place);
+				
+				tT.setText(team1 + " × " + team2);
+				tP.setText("\nLocal: " + city + ", " + stadium);
+				
+				return v;
 			} catch (Exception e) {
+				e.printStackTrace();
 			}
-			return v;
+			return null;
 		}
     }
     

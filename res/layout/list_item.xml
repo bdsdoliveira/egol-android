@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+   	android:padding="10dp"
+   	android:background="@drawable/list_item_box" >
     
-    <TextView android:id="@+id/list_item_text"
+    <TextView android:id="@+id/list_item_teams"
         android:layout_width="match_parent"
-    	android:layout_height="match_parent"
-    	android:layout_centerVertical="true"
-    	android:padding="10dp"
-    	android:background="@drawable/list_item_box"
+    	android:layout_height="wrap_content"
     	android:textSize="18sp"
-    	android:textColor="#aaa"
-    	android:textIsSelectable="true" />
+    	android:textColor="#999" />
+        
+	<TextView android:id="@+id/list_item_place"
+        android:layout_width="match_parent"
+    	android:layout_height="wrap_content"
+    	android:layout_below="@id/list_item_teams"
+    	android:textSize="14sp"
+    	android:textColor="#bbb" />
     
 </RelativeLayout>
