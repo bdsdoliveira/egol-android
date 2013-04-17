@@ -5,12 +5,22 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity" >
     
+    <TextView android:id="@+id/games_search"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:padding="10dp"
+        android:text="@string/games_search"
+        android:textColor="#bbb"
+        android:textSize="18sp"
+        android:textIsSelectable="true" />
+    
     <ListView android:id="@+id/games_list"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:layout_below="@id/games_search"
         android:layout_margin="12dp"
         android:layout_marginBottom="0dp"
         android:divider="@android:color/transparent"
-  		android:dividerHeight="10dp"
-  		android:clipToPadding= "true" />
+  		android:dividerHeight="10dp" />
 </RelativeLayout>

@@ -24,10 +24,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.SearchView;
+import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements OnQueryTextListener {
 	private final String GET_URL = "http://192.168.1.124:3000/games";
 	
     @Override
@@ -153,9 +155,26 @@ public class MainActivity extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.games, menu);
+
+		SearchView s = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        s.setOnQueryTextListener(this);
+        
         return true;
     }
 
+    public boolean onQueryTextChange(String s) {
+        s = s.isEmpty() ? "" : "Query so far: " + s;
+        TextView t = (TextView) findViewById(R.id.games_search);
+        t.setText(s);
+        return true;
+    }
+ 
+    public boolean onQueryTextSubmit (String s) {
+    	TextView t = (TextView) findViewById(R.id.games_search);
+    	t.setText("Searching for: " + s + "...");
+        return true;
+    }
+    
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
     	switch (item.getItemId()) {
@@ -166,11 +185,10 @@ public class MainActivity extends Activity {
     	case R.id.action_settings:
     		Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show();
     		break;
-
-      default:
-        break;
-      }
-      return true;
+    	default:
+    		break;
+    	}
+    	return true;
     } 
     
 }
