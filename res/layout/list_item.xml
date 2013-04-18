@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
    	android:padding="10dp"
-   	android:background="@drawable/list_item_box" >
+   	android:background="@drawable/item_box" >
     
     <TextView android:id="@+id/list_item_teams"
         android:layout_width="match_parent"

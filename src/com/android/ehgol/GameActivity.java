@@ -5,56 +5,60 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.location.Criteria;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
-public class GameActivity extends Activity implements LocationListener {
-	private LocationManager l;
-	String p;
+public class GameActivity extends Activity {
 	GoogleMap map;
-	LatLng CURRENT_LOCATION;
+	double GAME_LOCATION_LAT, GAME_LOCATION_LNG;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_game);
-		
-		l = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 	    
-		checkGPSEnabled();
-
 		map = ((MapFragment) getFragmentManager().findFragmentById(R.id.game_map)).getMap();
 		
-		getCurrentLocation();
+		buildGameFromIntent();
 		
-//		LatLng HAMBURG = new LatLng(53.558, 9.927);
-//		if (map != null){
-//			map.addMarker(new MarkerOptions()
-//				.position(HAMBURG)
-//				.title("Hamburg")
-//				.snippet("Hamburg is so cool..."));
-//		}
-//		map.moveCamera(CameraUpdateFactory.newLatLngZoom(HAMBURG, 9));
-//		map.animateCamera(CameraUpdateFactory.newLatLngZoom(HAMBURG, 10), 2000, null);
+		Button check_map = (Button) findViewById(R.id.map_button);
+		check_map.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent i = new Intent(GameActivity.this, CheckMapActivity.class);
+				GameActivity.this.startActivity(i);
+			}
+		});
 		
+		Button directions_map = (Button) findViewById(R.id.directions_button);
+		directions_map.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent i = new Intent(GameActivity.this, DirectionsMapActivity.class);
+				i.putExtra("LOCATION_LAT", GAME_LOCATION_LAT);
+				i.putExtra("LOCATION_LNG", GAME_LOCATION_LNG);
+				GameActivity.this.startActivity(i);
+			}
+		});
+	
+	}
+	
+	
+	
+	private void buildGameFromIntent() {
 		Intent intent = getIntent();
 		String extra = intent.getStringExtra("JSON");
 		JSONArray array = null;
@@ -84,101 +88,25 @@ public class GameActivity extends Activity implements LocationListener {
 		
 		mTeams.setText(team1 + " × " + team2);
 		mPlace.setText("\nLocal: " + city + ", " + stadium);
-	}
+		
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-		l.requestLocationUpdates(p, 400, 1, this);
-	}
-
-	@Override
-	protected void onPause() {
-	    super.onPause();
-	    l.removeUpdates(this);
-	}
-
-	
-	public void getCurrentLocation() {
-	    // Define the criteria how to select the location provider -> use default
-	    Criteria c = new Criteria();
-	    p = l.getBestProvider(c, false);
-	    Location location = l.getLastKnownLocation(p);
-
-	    l.requestLocationUpdates(p, 400, 1, this);
-	    
-	    // Initialize the location fields
-	    if (location != null) {
-	    	Toast.makeText(getApplicationContext(), "Provider " + p + " has been selected.", Toast.LENGTH_SHORT).show();
-	    	onLocationChanged(location);
-	    } else {
-	    	Toast.makeText(getApplicationContext(), "Location not available.", Toast.LENGTH_SHORT).show();
-	    }
-	}
-	
-	
-	@Override
-	public void onLocationChanged(Location l) {
-	    int latitude = (int) (l.getLatitude());
-	    int longitude = (int) (l.getLongitude());
-	    CURRENT_LOCATION = new LatLng(latitude, longitude);
-	    Toast.makeText(this, CURRENT_LOCATION.toString(), Toast.LENGTH_SHORT).show();
-	    map.moveCamera(CameraUpdateFactory.newLatLngZoom(CURRENT_LOCATION, 9));
-		map.animateCamera(CameraUpdateFactory.newLatLngZoom(CURRENT_LOCATION, 10), 2000, null);
-	}
-
-	@Override
-	public void onStatusChanged(String p, int status, Bundle extras) {
+		/* Temporary code for testing */
+		LatLng GAME_LATLNG = new LatLng(53.558, 9.927);
+		if (map != null){
+			map.addMarker(new MarkerOptions()
+				.position(GAME_LATLNG)
+				.title("Game")
+				.snippet(""));
+		}
+		/* ************************** */
+		
+		GAME_LOCATION_LAT = GAME_LATLNG.latitude; 
+		GAME_LOCATION_LNG = GAME_LATLNG.longitude;
+		
+		map.moveCamera(CameraUpdateFactory.newLatLngZoom(GAME_LATLNG, 9));
+		map.animateCamera(CameraUpdateFactory.newLatLngZoom(GAME_LATLNG, 10), 2000, null);
 		
 	}
-	
-	@Override
-	public void onProviderEnabled(String p) {
-		Toast.makeText(this, "Enabled new provider " + p, Toast.LENGTH_SHORT).show();
-	}
-	
-	@Override
-	public void onProviderDisabled(String pr) {
-		Toast.makeText(this, "Disabled provider " + p, Toast.LENGTH_SHORT).show();
-	}
-	
-	
-	
-	
-	
-	public void checkGPSEnabled() {
-		boolean enabled = l.isProviderEnabled(LocationManager.GPS_PROVIDER);
-
-		if (!enabled) {
-			AlertDialog.Builder a = new AlertDialog.Builder(this);
-	 
-			a.setTitle("Enable GPS?");
-	 
-			a.setMessage("This application requires GPS to be enable for location features.")
-				.setCancelable(false)
-				.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog,int id) {
-						// Open system settings for GPS
-						Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-						startActivity(intent);
-					}
-				})
-				.setNegativeButton("No", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog,int id) {
-						dialog.cancel();
-					}
-				});
-	 
-			AlertDialog d = a.create();
-	 
-			d.show();
-		}
-	}
-	
-	
-	
-	
 	
 	
 

@@ -142,33 +142,44 @@ containing a value of this type.
         public static final int ic_launcher=0x7f020000;
         public static final int ic_menu_search_holo_dark=0x7f020001;
         public static final int ic_menu_search_holo_light=0x7f020002;
-        public static final int list_item_box=0x7f020003;
+        public static final int item_box=0x7f020003;
     }
     public static final class id {
-        public static final int action_reload=0x7f04000e;
-        public static final int action_search=0x7f04000d;
-        public static final int action_settings=0x7f04000c;
-        public static final int comment_button=0x7f040005;
-        public static final int game_map=0x7f040007;
-        public static final int games_list=0x7f040009;
-        public static final int games_search=0x7f040008;
+        public static final int action_reload=0x7f040015;
+        public static final int action_search=0x7f040014;
+        public static final int action_settings=0x7f040013;
+        public static final int comment_button=0x7f040007;
+        public static final int directions_button=0x7f040005;
+        public static final int facebook_button=0x7f040009;
+        public static final int game_map=0x7f040006;
+        public static final int game_map_actions=0x7f04000d;
+        public static final int game_share=0x7f040008;
+        public static final int games_list=0x7f040010;
+        public static final int games_search=0x7f04000f;
+        public static final int gplus_button=0x7f04000b;
         public static final int hybrid=0x7f040004;
-        public static final int list_item=0x7f040006;
-        public static final int list_item_place=0x7f04000b;
-        public static final int list_item_teams=0x7f04000a;
+        public static final int list_item=0x7f04000c;
+        public static final int list_item_place=0x7f040012;
+        public static final int list_item_teams=0x7f040011;
+        public static final int map_button=0x7f04000e;
         public static final int none=0x7f040000;
         public static final int normal=0x7f040001;
         public static final int satellite=0x7f040002;
         public static final int terrain=0x7f040003;
+        public static final int twitter_button=0x7f04000a;
     }
     public static final class layout {
-        public static final int activity_game=0x7f030000;
-        public static final int activity_main=0x7f030001;
-        public static final int list_item=0x7f030002;
+        public static final int activity_checkmap=0x7f030000;
+        public static final int activity_directionsmap=0x7f030001;
+        public static final int activity_game=0x7f030002;
+        public static final int activity_main=0x7f030003;
+        public static final int list_item=0x7f030004;
     }
     public static final class menu {
-        public static final int menu_game=0x7f080000;
-        public static final int menu_main=0x7f080001;
+        public static final int menu_checkmap=0x7f080000;
+        public static final int menu_directionsmap=0x7f080001;
+        public static final int menu_game=0x7f080002;
+        public static final int menu_main=0x7f080003;
     }
     public static final class string {
         public static final int action_reload=0x7f050013;
@@ -238,8 +249,16 @@ containing a value of this type.
         find the service-side assets. [CHAR LIMIT=25] 
          */
         public static final int common_signin_button_text_long=0x7f05000d;
+        public static final int directions_button=0x7f050019;
+        public static final int facebook_button=0x7f05001a;
         public static final int games_search=0x7f050015;
+        public static final int gplus_button=0x7f05001c;
+        public static final int hello_world=0x7f05001f;
+        public static final int map_button=0x7f050018;
+        public static final int title_activity_check_map=0x7f05001d;
+        public static final int title_activity_directions_map=0x7f05001e;
         public static final int title_activity_game=0x7f050016;
+        public static final int twitter_button=0x7f05001b;
     }
     public static final class style {
         /** 

@@ -1,32 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="12dp"
-    android:paddingBottom="0dp" >
+    android:paddingBottom="0dp"
+    tools:context=".GameActivity" >
     
     <Button android:id="@+id/comment_button"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+        android:padding="10dp"
+        android:singleLine="true"
+   		android:background="@drawable/item_box"
+        android:text="@string/comment_button" />
+    
+	<LinearLayout android:id="@+id/game_share"
+       	android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/comment_button"
         android:layout_marginTop="6dp"
         android:layout_marginBottom="12dp"
-        android:text="@string/comment_button" />
+        android:orientation="horizontal" >
+    	<Button android:id="@+id/facebook_button"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:padding="10dp"
+	        android:layout_weight="1"
+	        android:singleLine="true"
+	   		android:background="@drawable/item_box"
+	        android:text="@string/facebook_button" />
+	    <Button android:id="@+id/twitter_button"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:padding="10dp"
+	        android:layout_weight="1"
+	        android:singleLine="true"
+	   		android:background="@drawable/item_box"
+	        android:text="@string/twitter_button" />
+	    <Button android:id="@+id/gplus_button"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:padding="10dp"
+	        android:layout_weight="1"
+	        android:singleLine="true"
+	   		android:background="@drawable/item_box"
+	        android:text="@string/gplus_button" />
+	</LinearLayout>
     
     <include android:id="@+id/list_item"
         layout="@layout/list_item"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="6dp" />
-    
-    <fragment android:id="@+id/game_map"
-        android:name="com.google.android.gms.maps.MapFragment"
+
+    <RelativeLayout 
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_below="@id/list_item"
-        android:layout_above="@id/comment_button"
+        android:layout_above="@id/game_share"
         android:layout_marginTop="6dp"
-        android:layout_marginBottom="6dp" />
+        android:layout_marginBottom="6dp" >
+		<LinearLayout android:id="@+id/game_map_actions"
+        	android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentBottom="true"
+	        android:orientation="horizontal" >
+		    <Button android:id="@+id/map_button"
+		        android:layout_width="fill_parent"
+		        android:layout_height="wrap_content"
+		        android:padding="10dp"
+		        android:layout_weight="1"
+		        android:singleLine="true"
+		   		android:background="@drawable/item_box"
+		        android:text="@string/map_button" />
+		    <Button android:id="@+id/directions_button"
+		        android:layout_width="fill_parent"
+		        android:layout_height="wrap_content"
+		        android:padding="10dp"
+		        android:layout_weight="1"
+		        android:singleLine="true"
+		   		android:background="@drawable/item_box"
+		        android:text="@string/directions_button" />
+		</LinearLayout>
+	    <fragment android:id="@+id/game_map"
+	        android:name="com.google.android.gms.maps.MapFragment"
+	        android:layout_width="fill_parent"
+	        android:layout_height="fill_parent"
+        	android:layout_above="@id/game_map_actions" />
+    </RelativeLayout>
     
 </RelativeLayout>
