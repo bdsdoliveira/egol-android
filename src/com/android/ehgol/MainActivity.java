@@ -3,11 +3,11 @@ package com.android.ehgol;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.HttpConnectionParams;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,12 +15,14 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
@@ -28,10 +30,9 @@ import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.android.ehgol.R;
 
 public class MainActivity extends Activity implements OnQueryTextListener {
-	private final String GET_URL = "http://192.168.0.12:3000/games";
+//	private final String GET_URL = "http://192.168.0.12:3000/games";
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +44,7 @@ public class MainActivity extends Activity implements OnQueryTextListener {
     }
     
     
-    private class GetGamesTask extends AsyncTask<String, Void, Void> {
+    public class GetGamesTask extends AsyncTask<String, Void, Void> {
     	private ProgressDialog p = new ProgressDialog(MainActivity.this);
 		StringBuilder sb = new StringBuilder();
 		JSONArray array;
@@ -60,19 +61,27 @@ public class MainActivity extends Activity implements OnQueryTextListener {
 		@Override
 		protected Void doInBackground(String... s) {
 			try {
+				// Set up object for HTTP request
 				HttpClient client = new DefaultHttpClient();
+				/* Temporary code for offline testing */
+				String GET_URL = "";
+				/* ********************************** */
 				HttpGet get = new HttpGet(GET_URL);
+				
+				// Set options for the request 
 				get.setHeader("Accept", "application/json");
-//				HttpConnectionParams.setConnectionTimeout(client.getParams(), 5000);
-//				HttpConnectionParams.setSoTimeout(client.getParams(), 10000);
+				HttpConnectionParams.setConnectionTimeout(client.getParams(), 15000);
+				HttpConnectionParams.setSoTimeout(client.getParams(), 20000);
+				
+				// Execute and save response and status 
 				HttpResponse response = client.execute(get);
-				HttpEntity entity = response.getEntity();
 				status = response.getStatusLine().getStatusCode();
 				
+				// Only set the array if status is OK (200)
 				if (status == 200) {
-					BufferedReader b = new BufferedReader(new InputStreamReader(entity.getContent()));
-					String str = null;
-					while ((str = b.readLine()) != null) sb.append(str);
+					BufferedReader b = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+					String aux = null;
+					while ((aux = b.readLine()) != null) sb.append(aux);
 					array = new JSONArray(sb.toString());
 				}
 			} catch (Exception e) {
@@ -83,7 +92,15 @@ public class MainActivity extends Activity implements OnQueryTextListener {
 		
 		protected void onPostExecute(Void v) {
 			p.dismiss();
-
+			
+			/* Temporary code for offline testing */
+			try {
+				array = new JSONArray("[{\"city\":\"São Paulo\",\"group\":\"Verde\",\"id\":1,\"stadium\":\"Arena de São Paulo\",\"team1\":\"A1\",\"team2\":\"A2\"},{\"city\":\"Rio de Janeiro\",\"group\":\"Verde\",\"id\":8,\"stadium\":\"Estádio do Maracanã\",\"team1\":\"A3\",\"team2\":\"A4\"},{\"city\":\"Salvador\",\"group\":\"Azul\",\"id\":9,\"stadium\":\"Estádio BLA\",\"team1\":\"B1\",\"team2\":\"B2\"}]");
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			/* ********************************** */
+			
 			if (array != null) {
 		        ListView games_list = (ListView) findViewById(R.id.games_list);
 				games_list.setAdapter(new GamesListAdapter(array, MainActivity.this));
@@ -94,24 +111,24 @@ public class MainActivity extends Activity implements OnQueryTextListener {
     
     
     
-    public class GamesListAdapter extends BaseAdapter {
-    	private JSONArray json;
+    private class GamesListAdapter extends BaseAdapter {
+    	private JSONArray array;
     	Context c;
     	
-    	GamesListAdapter(JSONArray json, Context c) {
-    		this.json = json;
+    	GamesListAdapter(JSONArray array, Context c) {
+    		this.array = array;
     		this.c = c;
     	}
     	
 		@Override
 		public int getCount() {
-			return json.length();
+			return array.length();
 		}
 		
 		@Override
 		public JSONObject getItem(int i) {
 			try {
-				return json.getJSONObject(i);
+				return array.getJSONObject(i);
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
@@ -124,38 +141,52 @@ public class MainActivity extends Activity implements OnQueryTextListener {
 		}
 		
 		@Override
-		public View getView(int i, View view, ViewGroup parent) {
+		public View getView(final int i, View view, ViewGroup parent) {
+			View v = view;
+			JSONObject o;
+			String team1 = null;
+			String team2 = null;
+			String city = null;
+			String stadium = null;
 			try {
-				View v = view;
-				JSONObject object = json.getJSONObject(i);
-				String team1 = object.getString("team1").toString();
-				String team2 = object.getString("team2").toString();
-				String city = object.getString("city").toString();
-				String stadium = object.getString("stadium").toString();
-				
-				if (v == null) {
-					LayoutInflater l = (LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-					v = l.inflate(R.layout.list_item, null);
-				}
-	
-				TextView tT = (TextView) v.findViewById(R.id.list_item_teams);
-				TextView tP = (TextView) v.findViewById(R.id.list_item_place);
-				
-				tT.setText(team1 + " × " + team2);
-				tP.setText("\nLocal: " + city + ", " + stadium);
-				
-				return v;
-			} catch (Exception e) {
+				o = getItem(i);
+				team1 = o.getString("team1").toString();
+				team2 = o.getString("team2").toString();
+				city = o.getString("city").toString();
+				stadium = o.getString("stadium").toString();
+			} catch (JSONException e) {
 				e.printStackTrace();
 			}
-			return null;
+			
+			if (v == null) {
+				LayoutInflater l = (LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				v = l.inflate(R.layout.list_item, null);
+			}
+
+			TextView mTeams = (TextView) v.findViewById(R.id.list_item_teams);
+			TextView mPlace = (TextView) v.findViewById(R.id.list_item_place);
+			
+			mTeams.setText(team1 + " × " + team2);
+			mPlace.setText("\nLocal: " + city + ", " + stadium);
+			
+			v.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent(c, GameActivity.class);
+					intent.putExtra("JSON", GamesListAdapter.this.getItem(i).toString());
+					c.startActivity(intent);
+				}
+			});
+			
+			return v;
 		}
     }
     
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.games, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
 
 		SearchView s = (SearchView) menu.findItem(R.id.action_search).getActionView();
         s.setOnQueryTextListener(this);

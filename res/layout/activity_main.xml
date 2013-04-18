@@ -15,19 +15,11 @@
         android:textColor="#bbb"
         android:textSize="18sp"
         android:textIsSelectable="true" />
-    
-    <fragment android:id="@+id/games_map"
-        android:name="com.google.android.gms.maps.MapFragment"
-        android:layout_width="fill_parent"
-    	android:layout_height="240dp"
-        android:layout_marginBottom="6dp"
-        android:layout_below="@id/games_search"
-        android:clickable="true" />
         
     <ListView android:id="@+id/games_list"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@id/games_map"
+        android:layout_below="@id/games_search"
         android:layout_marginTop="6dp"
         android:layout_marginBottom="0dp"
         android:divider="@android:color/transparent"

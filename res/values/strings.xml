@@ -8,6 +8,7 @@
     <string name="action_search">Search for teams and places</string>
     <string name="games_search">Search:</string>
     
+    <string name="title_activity_game">É Gol!</string>
     <string name="comment_button">Post a comment</string>
 
 </resources>
