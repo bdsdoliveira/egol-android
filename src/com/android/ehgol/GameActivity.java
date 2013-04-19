@@ -63,20 +63,16 @@ public class GameActivity extends Activity {
 	private void buildGameFromIntent() {
 		Intent intent = getIntent();
 		String extra = intent.getStringExtra("JSON");
-		JSONArray array = null;
-		try {
-			array = new JSONArray("[" + extra + "]");
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
 		
 		JSONObject o;
+		JSONArray a;
 		String team1 = null;
 		String team2 = null;
 		String city = null;
 		String stadium = null;
 		try {
-			o = array.getJSONObject(0);
+			a = new JSONArray(extra);
+			o = a.getJSONObject(0);
 			team1 = o.getString("team1").toString();
 			team2 = o.getString("team2").toString();
 			city = o.getString("city").toString();

@@ -26,6 +26,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -101,8 +102,8 @@ public class MainActivity extends Activity implements OnQueryTextListener {
 			try {
 				array = new JSONArray("[{\"city\":\"São Paulo\",\"group\":\"Verde\",\"id\":1,\"stadium\":\"Arena de São Paulo\",\"team1\":\"A1\",\"team2\":\"A2\"}," +
 						"{\"city\":\"Rio de Janeiro\",\"group\":\"Verde\",\"id\":8,\"stadium\":\"Estádio do Maracanã\",\"team1\":\"A3\",\"team2\":\"A4\"}," +
-						"{\"city\":\"Cuiabá\",\"group\":\"Rosa\",\"id\":11,\"stadium\":\"Arena Pantanal\",\"team1\":\"B3\",\"team2\":\"B4\"}," +
 						"{\"city\":\"Salvador\",\"group\":\"Rosa\",\"id\":9,\"stadium\":\"Arena Fonte Nova\",\"team1\":\"B1\",\"team2\":\"B2\"}," +
+						"{\"city\":\"Cuiabá\",\"group\":\"Rosa\",\"id\":11,\"stadium\":\"Arena Pantanal\",\"team1\":\"B3\",\"team2\":\"B4\"}," +
 						"{\"city\":\"Belo Horizonte\",\"group\":\"Preto\",\"id\":12,\"stadium\":\"Estádio Mineirão\",\"team1\":\"C1\",\"team2\":\"C2\"}," +
 						"{\"city\":\"Recife\",\"group\":\"Preto\",\"id\":13,\"stadium\":\"Arena Pernambuco\",\"team1\":\"C3\",\"team2\":\"C4\"}," +
 						"{\"city\":\"Fortaleza\",\"group\":\"Azul\",\"id\":14,\"stadium\":\"Estádio Castelão\",\"team1\":\"D1\",\"team2\":\"D2\"}," +
@@ -114,7 +115,8 @@ public class MainActivity extends Activity implements OnQueryTextListener {
 			
 			if (array != null) {
 		        ListView games_list = (ListView) findViewById(R.id.games_list);
-		        gamesListAdapter = new GamesListAdapter(array, MainActivity.this);
+		        games_list.setTextFilterEnabled(true);
+		        gamesListAdapter = new GamesListAdapter(array);
 				games_list.setAdapter(gamesListAdapter);
 				Toast.makeText(getApplicationContext(), "Games loaded.", Toast.LENGTH_SHORT).show();
 			} else Toast.makeText(getApplicationContext(), "Failed: error " + status, Toast.LENGTH_SHORT).show();
@@ -125,16 +127,13 @@ public class MainActivity extends Activity implements OnQueryTextListener {
     
     private class GamesListAdapter extends BaseAdapter {
     	private List<String> items = new ArrayList<String>();
-    	Context c;
-    	JSONArray a;
+    	private List<String> items_showing = new ArrayList<String>();
     	
-    	GamesListAdapter(JSONArray array, Context c) {
-    		this.c = c;
-    		this.a = array;
-    		
+    	GamesListAdapter(JSONArray array) {
     		for (int i = 0; i < array.length(); i++) {
     			try {
     				items.add("[" + array.getJSONObject(i).toString() + "]");
+    				items_showing.add("[" + array.getJSONObject(i).toString() + "]");
     			} catch (JSONException e) {
     				e.printStackTrace();
     			}
@@ -143,17 +142,12 @@ public class MainActivity extends Activity implements OnQueryTextListener {
     	
 		@Override
 		public int getCount() {
-			return items.size();
+			return items_showing.size();
 		}
 		
 		@Override
-		public JSONObject getItem(int i) {
-			try {
-				return a.getJSONObject(i);
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-			return null;
+		public String getItem(int i) {
+			return items_showing.get(i);
 		}
 		
 		@Override
@@ -165,12 +159,15 @@ public class MainActivity extends Activity implements OnQueryTextListener {
 		public View getView(final int i, View view, ViewGroup parent) {
 			View v = view;
 			JSONObject o;
+			JSONArray a;
 			String team1 = null;
 			String team2 = null;
 			String city = null;
 			String stadium = null;
+			
 			try {
-				o = getItem(i);
+				a = new JSONArray(getItem(i));
+				o = a.getJSONObject(0);
 				team1 = o.getString("team1").toString();
 				team2 = o.getString("team2").toString();
 				city = o.getString("city").toString();
@@ -180,7 +177,7 @@ public class MainActivity extends Activity implements OnQueryTextListener {
 			}
 			
 			if (v == null) {
-				LayoutInflater l = (LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				LayoutInflater l = (LayoutInflater) MainActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				v = l.inflate(R.layout.list_item, null);
 			}
 
@@ -193,12 +190,11 @@ public class MainActivity extends Activity implements OnQueryTextListener {
 			mStadium.setText("Local: " + stadium);
 			
 			v.setOnClickListener(new OnClickListener() {
-				
 				@Override
 				public void onClick(View v) {
-					Intent intent = new Intent(c, GameActivity.class);
+					Intent intent = new Intent(MainActivity.this, GameActivity.class);
 					intent.putExtra("JSON", GamesListAdapter.this.getItem(i).toString());
-					c.startActivity(intent);
+					startActivity(intent);
 				}
 			});
 			
@@ -206,25 +202,35 @@ public class MainActivity extends Activity implements OnQueryTextListener {
 		}
 		
 		public void filterSearch(String s) {
-			List<String> filtered = new ArrayList<String>();
+	    	List<String> filtered = new ArrayList<String>();
 			JSONObject o;
+			JSONArray a;
 			
-			for (int i = 0; i < this.items.size(); i++) {
+			// Reset items to original values
+			items_showing = items;
+
+			// Search in each game inside its details
+			for (int i = 0; i < this.items_showing.size(); i++) {
 				try {
-					o = getItem(i);
-					if (o.getString("team1").toString().contains(s) ||
-						o.getString("team2").toString().contains(s) ||
-						o.getString("city").toString().contains(s) ||
-						o.getString("stadium").toString().contains(s))
-						filtered.add(o.toString());
+					a = new JSONArray(getItem(i));
+					o = a.getJSONObject(0);
+					if (o.getString("team1").toLowerCase().contains(s) ||
+						o.getString("team2").toLowerCase().contains(s) ||
+						o.getString("city").toLowerCase().contains(s) ||
+						o.getString("stadium").toLowerCase().contains(s) ||
+						o.getString("team1").toUpperCase().contains(s) ||
+						o.getString("team2").toUpperCase().contains(s) ||
+						o.getString("city").toUpperCase().contains(s) ||
+						o.getString("stadium").toUpperCase().contains(s)) {
+						filtered.add("[" + o.toString() + "]");
+					}
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
 			}
 			
-			this.items = filtered;
-
-	        this.notifyDataSetChanged();
+			this.items_showing = filtered;
+			notifyDataSetChanged();
 		}
 		
     }
@@ -234,22 +240,37 @@ public class MainActivity extends Activity implements OnQueryTextListener {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
-        SearchView s = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        final MenuItem menuItemSearch = menu.findItem(R.id.action_search);
+        s = (SearchView) menuItemSearch.getActionView();
+        menuItemSearch.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+			@Override
+			public boolean onMenuItemActionExpand(MenuItem item) {
+				return true;
+			}
+			
+			@Override
+			public boolean onMenuItemActionCollapse(MenuItem item) {
+				s.setQuery("", true);
+				return true;
+			}
+		});
+        s.setQueryHint("Search for teams and places");
         s.setOnQueryTextListener(this);
+        
         
         return true;
     }
 
-    public boolean onQueryTextChange(String s) {
-        s = s.isEmpty() ? "" : "Query so far: " + s;
-        gamesListAdapter.filterSearch(s);
+    public boolean onQueryTextChange(String query) {
+    	gamesListAdapter.filterSearch(query);
         return true;
     }
  
-    public boolean onQueryTextSubmit (String s) {
-    	TextView t = (TextView) findViewById(R.id.games_search);
-    	t.setText("Searching for: " + s + "...");
-        gamesListAdapter.filterSearch(s);
+    public boolean onQueryTextSubmit (String query) {
+        // Hide keyboard because search was already
+    	// made in real time using onQueryTextChange
+    	InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+    	imm.hideSoftInputFromWindow(s.getWindowToken(), 0);
         return true;
     }
     
