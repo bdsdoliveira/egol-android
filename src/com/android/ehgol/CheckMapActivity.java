@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -18,6 +17,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class CheckMapActivity extends Activity {
 	GoogleMap map;
+	double GAME_LOCATION_LAT, GAME_LOCATION_LNG;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,12 +40,13 @@ public class CheckMapActivity extends Activity {
 
 	private void buildMapFromIntent() {
 		Intent i = getIntent();
-		Toast.makeText(this, String.valueOf(i.getDoubleExtra("LOCATION_LAT", 0)), Toast.LENGTH_SHORT).show();
-		Toast.makeText(this, String.valueOf(i.getDoubleExtra("LOCATION_LNG", 0)), Toast.LENGTH_SHORT).show();
 		LatLng GAME_LATLNG = new LatLng(i.getDoubleExtra("LOCATION_LAT", 0), i.getDoubleExtra("LOCATION_LNG", 0));
+
+		GAME_LOCATION_LAT = GAME_LATLNG.latitude; 
+		GAME_LOCATION_LNG = GAME_LATLNG.longitude;
 		
-		map.moveCamera(CameraUpdateFactory.newLatLngZoom(GAME_LATLNG, 9));
-		map.animateCamera(CameraUpdateFactory.newLatLngZoom(GAME_LATLNG, 10), 2000, null);
+		map.moveCamera(CameraUpdateFactory.newLatLngZoom(GAME_LATLNG, 14));
+		map.animateCamera(CameraUpdateFactory.newLatLngZoom(GAME_LATLNG, 15), 2000, null);
 	}
 	
 	

@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnMyLocationChangeListener;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -33,25 +34,63 @@ public class DirectionsMapActivity extends Activity implements LocationListener 
 		setContentView(R.layout.activity_directionsmap);
 
 		l = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		
-		checkGPSEnabled();
 
 		map = ((MapFragment) getFragmentManager().findFragmentById(R.id.game_map)).getMap();
 		
-		getCurrentLocation();
+		checkGPSEnabled();
+		
+		map.setMyLocationEnabled(true);
+		
+		map.setOnMyLocationChangeListener(new OnMyLocationChangeListener() {
+			@Override
+			public void onMyLocationChange(Location l) {
+			    CURRENT_LOCATION = new LatLng(l.getLatitude(), l.getLongitude());
+			    Toast.makeText(DirectionsMapActivity.this, CURRENT_LOCATION.toString(), Toast.LENGTH_SHORT).show();
+			    map.moveCamera(CameraUpdateFactory.newLatLngZoom(CURRENT_LOCATION, 14));
+			}
+		});
+
+//	    CURRENT_LOCATION = new LatLng(map.getMyLocation().getLatitude(), map.getMyLocation().getLongitude());
+//	    Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+//	    map.moveCamera(CameraUpdateFactory.newLatLngZoom(CURRENT_LOCATION, 11));
+		
+//		Intent intent = getIntent();
+//		LatLng GAME_LATLNG = new LatLng(intent.getDoubleExtra("LOCATION_LAT", 0), intent.getDoubleExtra("LOCATION_LNG", 0));
+		
+//		getCurrentLocation();
+		
+//		requestDirections(GAME_LATLNG, CURRENT_LOCATION);
 		
 	}
+	
 
+//	private void requestDirections(final LatLng start, final LatLng dest) {
+//	    //https://developers.google.com/maps/documentation/directions/#JSON <- get api
+//	    String jsonURL = "http://maps.googleapis.com/maps/api/directions/json?";
+//	    final StringBuffer sBuf = new StringBuffer(jsonURL);
+//	    sBuf.append("origin=");
+//	    sBuf.append(start.latitude);
+//	    sBuf.append(',');
+//	    sBuf.append(start.longitude);
+//	    sBuf.append("&destination=");
+//	    sBuf.append(dest.latitude);
+//	    sBuf.append(',');
+//	    sBuf.append(dest.longitude);
+//	    sBuf.append("&sensor=true&mode=driving");
+//	}
+	
+	
+	
 	@Override
 	protected void onResume() {
 		super.onResume();
-		l.requestLocationUpdates(p, 400, 1, this);
+//		l.requestLocationUpdates(p, 400, 1, this);
 	}
 
 	@Override
 	protected void onPause() {
 	    super.onPause();
-	    l.removeUpdates(this);
+//	    l.removeUpdates(this);
 	}
 
 	
@@ -76,18 +115,18 @@ public class DirectionsMapActivity extends Activity implements LocationListener 
 	    } else {
 	    	Toast.makeText(getApplicationContext(), "Location not available.", Toast.LENGTH_SHORT).show();
 	    }
-
+	    
 //	    d.dismiss();
 	}
 	
 	
 	@Override
 	public void onLocationChanged(Location location) {
-	    CURRENT_LOCATION = new LatLng(location.getLatitude(), location.getLongitude());
-	    Toast.makeText(this, CURRENT_LOCATION.toString(), Toast.LENGTH_SHORT).show();
-	    map.moveCamera(CameraUpdateFactory.newLatLngZoom(CURRENT_LOCATION, 11));
-		map.animateCamera(CameraUpdateFactory.newLatLngZoom(CURRENT_LOCATION, 14), 2000, null);
-	    l.removeUpdates(this);
+//	    CURRENT_LOCATION = new LatLng(location.getLatitude(), location.getLongitude());
+//	    Toast.makeText(this, CURRENT_LOCATION.toString(), Toast.LENGTH_SHORT).show();
+//	    map.moveCamera(CameraUpdateFactory.newLatLngZoom(CURRENT_LOCATION, 11));
+//		map.animateCamera(CameraUpdateFactory.newLatLngZoom(CURRENT_LOCATION, 14), 2000, null);
+//	    l.removeUpdates(this);
 	}
 
 	@Override

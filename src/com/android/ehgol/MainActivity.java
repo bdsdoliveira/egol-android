@@ -32,7 +32,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends Activity implements OnQueryTextListener {
-//	private final String GET_URL = "http://192.168.0.12:3000/games";
+	private final String GET_URL = "http://192.168.0.12:3000/games";
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +95,14 @@ public class MainActivity extends Activity implements OnQueryTextListener {
 			
 			/* Temporary code for offline testing */
 			try {
-				array = new JSONArray("[{\"city\":\"São Paulo\",\"group\":\"Verde\",\"id\":1,\"stadium\":\"Arena de São Paulo\",\"team1\":\"A1\",\"team2\":\"A2\"},{\"city\":\"Rio de Janeiro\",\"group\":\"Verde\",\"id\":8,\"stadium\":\"Estádio do Maracanã\",\"team1\":\"A3\",\"team2\":\"A4\"},{\"city\":\"Salvador\",\"group\":\"Azul\",\"id\":9,\"stadium\":\"Estádio BLA\",\"team1\":\"B1\",\"team2\":\"B2\"}]");
+				array = new JSONArray("[{\"city\":\"São Paulo\",\"group\":\"Verde\",\"id\":1,\"stadium\":\"Arena de São Paulo\",\"team1\":\"A1\",\"team2\":\"A2\"}," +
+						"{\"city\":\"Rio de Janeiro\",\"group\":\"Verde\",\"id\":8,\"stadium\":\"Estádio do Maracanã\",\"team1\":\"A3\",\"team2\":\"A4\"}," +
+						"{\"city\":\"Cuiabá\",\"group\":\"Rosa\",\"id\":11,\"stadium\":\"Arena Pantanal\",\"team1\":\"B3\",\"team2\":\"B4\"}," +
+						"{\"city\":\"Salvador\",\"group\":\"Rosa\",\"id\":9,\"stadium\":\"Arena Fonte Nova\",\"team1\":\"B1\",\"team2\":\"B2\"}," +
+						"{\"city\":\"Belo Horizonte\",\"group\":\"Preto\",\"id\":12,\"stadium\":\"Estádio Mineirão\",\"team1\":\"C1\",\"team2\":\"C2\"}," +
+						"{\"city\":\"Recife\",\"group\":\"Preto\",\"id\":13,\"stadium\":\"Arena Pernambuco\",\"team1\":\"C3\",\"team2\":\"C4\"}," +
+						"{\"city\":\"Fortaleza\",\"group\":\"Azul\",\"id\":14,\"stadium\":\"Estádio Castelão\",\"team1\":\"D1\",\"team2\":\"D2\"}," +
+						"{\"city\":\"Manaus\",\"group\":\"Azul\",\"id\":15,\"stadium\":\"Arena Amazônia\",\"team1\":\"D3\",\"team2\":\"D4\"}]");
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
@@ -164,10 +171,12 @@ public class MainActivity extends Activity implements OnQueryTextListener {
 			}
 
 			TextView mTeams = (TextView) v.findViewById(R.id.list_item_teams);
-			TextView mPlace = (TextView) v.findViewById(R.id.list_item_place);
+			TextView mCity = (TextView) v.findViewById(R.id.list_item_city);
+			TextView mStadium = (TextView) v.findViewById(R.id.list_item_stadium);
 			
 			mTeams.setText(team1 + " × " + team2);
-			mPlace.setText("\nLocal: " + city + ", " + stadium);
+			mCity.setText("Cidade: " + city);
+			mStadium.setText("Local: " + stadium);
 			
 			v.setOnClickListener(new OnClickListener() {
 				

@@ -145,9 +145,9 @@ containing a value of this type.
         public static final int item_box=0x7f020003;
     }
     public static final class id {
-        public static final int action_reload=0x7f040015;
-        public static final int action_search=0x7f040014;
-        public static final int action_settings=0x7f040013;
+        public static final int action_reload=0x7f040016;
+        public static final int action_search=0x7f040015;
+        public static final int action_settings=0x7f040014;
         public static final int comment_button=0x7f040007;
         public static final int directions_button=0x7f040005;
         public static final int facebook_button=0x7f040009;
@@ -159,7 +159,8 @@ containing a value of this type.
         public static final int gplus_button=0x7f04000b;
         public static final int hybrid=0x7f040004;
         public static final int list_item=0x7f04000c;
-        public static final int list_item_place=0x7f040012;
+        public static final int list_item_city=0x7f040012;
+        public static final int list_item_stadium=0x7f040013;
         public static final int list_item_teams=0x7f040011;
         public static final int map_button=0x7f04000e;
         public static final int none=0x7f040000;

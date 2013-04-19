@@ -39,6 +39,8 @@ public class GameActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				Intent i = new Intent(GameActivity.this, CheckMapActivity.class);
+				i.putExtra("LOCATION_LAT", GAME_LOCATION_LAT);
+				i.putExtra("LOCATION_LNG", GAME_LOCATION_LNG);
 				GameActivity.this.startActivity(i);
 			}
 		});
@@ -84,10 +86,12 @@ public class GameActivity extends Activity {
 		}
 		
 		TextView mTeams = (TextView) findViewById(R.id.list_item_teams);
-		TextView mPlace = (TextView) findViewById(R.id.list_item_place);
+		TextView mCity = (TextView) findViewById(R.id.list_item_city);
+		TextView mStadium = (TextView) findViewById(R.id.list_item_stadium);
 		
 		mTeams.setText(team1 + " × " + team2);
-		mPlace.setText("\nLocal: " + city + ", " + stadium);
+		mCity.setText("Cidade: " + city);
+		mStadium.setText("Local: " + stadium);
 		
 
 		/* Temporary code for testing */
@@ -103,8 +107,8 @@ public class GameActivity extends Activity {
 		GAME_LOCATION_LAT = GAME_LATLNG.latitude; 
 		GAME_LOCATION_LNG = GAME_LATLNG.longitude;
 		
-		map.moveCamera(CameraUpdateFactory.newLatLngZoom(GAME_LATLNG, 9));
-		map.animateCamera(CameraUpdateFactory.newLatLngZoom(GAME_LATLNG, 10), 2000, null);
+		map.moveCamera(CameraUpdateFactory.newLatLngZoom(GAME_LATLNG, 10));
+		map.animateCamera(CameraUpdateFactory.newLatLngZoom(GAME_LATLNG, 11), 2000, null);
 		
 	}
 	

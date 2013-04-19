@@ -1,21 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
    	android:padding="10dp"
    	android:background="@drawable/item_box" >
     
     <TextView android:id="@+id/list_item_teams"
         android:layout_width="match_parent"
     	android:layout_height="wrap_content"
-    	android:textSize="18sp"
+    	android:layout_marginBottom="6dp"
+        android:gravity="center_horizontal"
+        android:singleLine="true"
+    	android:textSize="48sp"
     	android:textColor="#999" />
         
-	<TextView android:id="@+id/list_item_place"
+	<TextView android:id="@+id/list_item_city"
         android:layout_width="match_parent"
     	android:layout_height="wrap_content"
     	android:layout_below="@id/list_item_teams"
-    	android:textSize="14sp"
+    	android:textSize="16sp"
     	android:textColor="#bbb" />
+	
+    <TextView android:id="@+id/list_item_stadium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/list_item_city"
+        android:textSize="16sp"
+        android:textColor="#bbb" />
     
 </RelativeLayout>

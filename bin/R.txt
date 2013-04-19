@@ -18,9 +18,9 @@ int drawable ic_launcher 0x7f020000
 int drawable ic_menu_search_holo_dark 0x7f020001
 int drawable ic_menu_search_holo_light 0x7f020002
 int drawable item_box 0x7f020003
-int id action_reload 0x7f040015
-int id action_search 0x7f040014
-int id action_settings 0x7f040013
+int id action_reload 0x7f040016
+int id action_search 0x7f040015
+int id action_settings 0x7f040014
 int id comment_button 0x7f040007
 int id directions_button 0x7f040005
 int id facebook_button 0x7f040009
@@ -32,7 +32,8 @@ int id games_search 0x7f04000f
 int id gplus_button 0x7f04000b
 int id hybrid 0x7f040004
 int id list_item 0x7f04000c
-int id list_item_place 0x7f040012
+int id list_item_city 0x7f040012
+int id list_item_stadium 0x7f040013
 int id list_item_teams 0x7f040011
 int id map_button 0x7f04000e
 int id none 0x7f040000
