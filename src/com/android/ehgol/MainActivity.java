@@ -2,6 +2,8 @@ package com.android.ehgol;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -33,6 +35,8 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity implements OnQueryTextListener {
 	private final String GET_URL = "http://192.168.0.12:3000/games";
+	SearchView s;
+	GamesListAdapter gamesListAdapter;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,7 +114,8 @@ public class MainActivity extends Activity implements OnQueryTextListener {
 			
 			if (array != null) {
 		        ListView games_list = (ListView) findViewById(R.id.games_list);
-				games_list.setAdapter(new GamesListAdapter(array, MainActivity.this));
+		        gamesListAdapter = new GamesListAdapter(array, MainActivity.this);
+				games_list.setAdapter(gamesListAdapter);
 				Toast.makeText(getApplicationContext(), "Games loaded.", Toast.LENGTH_SHORT).show();
 			} else Toast.makeText(getApplicationContext(), "Failed: error " + status, Toast.LENGTH_SHORT).show();
 		}
@@ -119,23 +124,32 @@ public class MainActivity extends Activity implements OnQueryTextListener {
     
     
     private class GamesListAdapter extends BaseAdapter {
-    	private JSONArray array;
+    	private List<String> items = new ArrayList<String>();
     	Context c;
+    	JSONArray a;
     	
     	GamesListAdapter(JSONArray array, Context c) {
-    		this.array = array;
     		this.c = c;
+    		this.a = array;
+    		
+    		for (int i = 0; i < array.length(); i++) {
+    			try {
+    				items.add("[" + array.getJSONObject(i).toString() + "]");
+    			} catch (JSONException e) {
+    				e.printStackTrace();
+    			}
+    		}
     	}
     	
 		@Override
 		public int getCount() {
-			return array.length();
+			return items.size();
 		}
 		
 		@Override
 		public JSONObject getItem(int i) {
 			try {
-				return array.getJSONObject(i);
+				return a.getJSONObject(i);
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
@@ -190,6 +204,29 @@ public class MainActivity extends Activity implements OnQueryTextListener {
 			
 			return v;
 		}
+		
+		public void filterSearch(String s) {
+			List<String> filtered = new ArrayList<String>();
+			JSONObject o;
+			
+			for (int i = 0; i < this.items.size(); i++) {
+				try {
+					o = getItem(i);
+					if (o.getString("team1").toString().contains(s) ||
+						o.getString("team2").toString().contains(s) ||
+						o.getString("city").toString().contains(s) ||
+						o.getString("stadium").toString().contains(s))
+						filtered.add(o.toString());
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			this.items = filtered;
+
+	        this.notifyDataSetChanged();
+		}
+		
     }
     
 
@@ -197,7 +234,7 @@ public class MainActivity extends Activity implements OnQueryTextListener {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
-		SearchView s = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        SearchView s = (SearchView) menu.findItem(R.id.action_search).getActionView();
         s.setOnQueryTextListener(this);
         
         return true;
@@ -205,14 +242,14 @@ public class MainActivity extends Activity implements OnQueryTextListener {
 
     public boolean onQueryTextChange(String s) {
         s = s.isEmpty() ? "" : "Query so far: " + s;
-        TextView t = (TextView) findViewById(R.id.games_search);
-        t.setText(s);
+        gamesListAdapter.filterSearch(s);
         return true;
     }
  
     public boolean onQueryTextSubmit (String s) {
     	TextView t = (TextView) findViewById(R.id.games_search);
     	t.setText("Searching for: " + s + "...");
+        gamesListAdapter.filterSearch(s);
         return true;
     }
     
