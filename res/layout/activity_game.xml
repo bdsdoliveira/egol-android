@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="12dp"
-    android:paddingBottom="0dp"
     tools:context=".GameActivity" >
     
     <Button android:id="@+id/comment_button"
@@ -15,7 +14,8 @@
         android:padding="10dp"
         android:singleLine="true"
    		android:background="@drawable/item_box"
-        android:text="@string/comment_button" />
+        android:text="@string/comment_button"
+        android:textColor="#777" />
     
 	<LinearLayout android:id="@+id/game_share"
        	android:layout_width="fill_parent"
@@ -31,7 +31,12 @@
 	        android:layout_weight="1"
 	        android:singleLine="true"
 	   		android:background="@drawable/item_box"
-	        android:text="@string/facebook_button" />
+	        android:text="@string/facebook_button"
+            android:textColor="#777" />
+    	<LinearLayout
+    	    android:layout_width="2dp"
+            android:layout_height="fill_parent"
+    	    android:background="@color/darker_bg_holo_light" />
 	    <Button android:id="@+id/twitter_button"
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
@@ -39,7 +44,12 @@
 	        android:layout_weight="1"
 	        android:singleLine="true"
 	   		android:background="@drawable/item_box"
-	        android:text="@string/twitter_button" />
+	        android:text="@string/twitter_button"
+            android:textColor="#777" />
+        <LinearLayout
+            android:layout_width="2dp"
+            android:layout_height="fill_parent"
+            android:background="@color/darker_bg_holo_light" />
 	    <Button android:id="@+id/gplus_button"
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
@@ -47,7 +57,8 @@
 	        android:layout_weight="1"
 	        android:singleLine="true"
 	   		android:background="@drawable/item_box"
-	        android:text="@string/gplus_button" />
+	        android:text="@string/gplus_button"
+            android:textColor="#777" />
 	</LinearLayout>
     
     <include android:id="@+id/list_item"
@@ -75,7 +86,12 @@
 		        android:layout_weight="1"
 		        android:singleLine="true"
 		   		android:background="@drawable/item_box"
-		        android:text="@string/map_button" />
+		        android:text="@string/map_button"
+                android:textColor="#777" />
+	        <LinearLayout
+	            android:layout_width="2dp"
+	            android:layout_height="fill_parent"
+	            android:background="@color/darker_bg_holo_light" />
 		    <Button android:id="@+id/directions_button"
 		        android:layout_width="fill_parent"
 		        android:layout_height="wrap_content"
@@ -83,7 +99,8 @@
 		        android:layout_weight="1"
 		        android:singleLine="true"
 		   		android:background="@drawable/item_box"
-		        android:text="@string/directions_button" />
+		        android:text="@string/directions_button"
+                android:textColor="#777" />
 		</LinearLayout>
 	    <fragment android:id="@+id/game_map"
 	        android:name="com.google.android.gms.maps.MapFragment"

@@ -12,20 +12,20 @@
         android:gravity="center_horizontal"
         android:singleLine="true"
     	android:textSize="48sp"
-    	android:textColor="#999" />
+    	android:textColor="#777" />
         
 	<TextView android:id="@+id/list_item_city"
         android:layout_width="match_parent"
     	android:layout_height="wrap_content"
     	android:layout_below="@id/list_item_teams"
     	android:textSize="16sp"
-    	android:textColor="#bbb" />
+    	android:textColor="#999" />
 	
     <TextView android:id="@+id/list_item_stadium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/list_item_city"
         android:textSize="16sp"
-        android:textColor="#bbb" />
+        android:textColor="#999" />
     
 </RelativeLayout>

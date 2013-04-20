@@ -37,12 +37,16 @@ import android.widget.Toast;
 public class MainActivity extends Activity implements OnQueryTextListener {
 	private final String GET_URL = "http://192.168.0.12:3000/games";
 	SearchView s;
+	ListView games_list;
 	GamesListAdapter gamesListAdapter;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        games_list = (ListView) findViewById(R.id.games_list);
+        games_list.setTextFilterEnabled(true);
 
 		GetGamesTask getGames = new GetGamesTask();
 		getGames.execute();
@@ -114,8 +118,6 @@ public class MainActivity extends Activity implements OnQueryTextListener {
 			/* ********************************** */
 			
 			if (array != null) {
-		        ListView games_list = (ListView) findViewById(R.id.games_list);
-		        games_list.setTextFilterEnabled(true);
 		        gamesListAdapter = new GamesListAdapter(array);
 				games_list.setAdapter(gamesListAdapter);
 				Toast.makeText(getApplicationContext(), "Games loaded.", Toast.LENGTH_SHORT).show();
@@ -193,7 +195,7 @@ public class MainActivity extends Activity implements OnQueryTextListener {
 				@Override
 				public void onClick(View v) {
 					Intent intent = new Intent(MainActivity.this, GameActivity.class);
-					intent.putExtra("JSON", GamesListAdapter.this.getItem(i).toString());
+					intent.putExtra("GAME_DETAILS", GamesListAdapter.this.getItem(i).toString());
 					startActivity(intent);
 				}
 			});
@@ -254,9 +256,8 @@ public class MainActivity extends Activity implements OnQueryTextListener {
 				return true;
 			}
 		});
-        s.setQueryHint("Search for teams and places");
+        s.setQueryHint("Search for games");
         s.setOnQueryTextListener(this);
-        
         
         return true;
     }

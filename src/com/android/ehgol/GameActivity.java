@@ -23,7 +23,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class GameActivity extends Activity {
 	GoogleMap map;
-	double GAME_LOCATION_LAT, GAME_LOCATION_LNG;
+	double GAME_DETAILS_LAT, GAME_DETAILS_LNG;
+	String team1, team2, city, stadium;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +40,12 @@ public class GameActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				Intent i = new Intent(GameActivity.this, CheckMapActivity.class);
-				i.putExtra("LOCATION_LAT", GAME_LOCATION_LAT);
-				i.putExtra("LOCATION_LNG", GAME_LOCATION_LNG);
+				i.putExtra("GAME_DETAILS_LAT", GAME_DETAILS_LAT);
+				i.putExtra("GAME_DETAILS_LNG", GAME_DETAILS_LNG);
+				i.putExtra("GAME_DETAILS_TEAM1", team1);
+				i.putExtra("GAME_DETAILS_TEAM2", team2);
+				i.putExtra("GAME_DETAILS_CITY", city);
+				i.putExtra("GAME_DETAILS_STADIUM", stadium);
 				GameActivity.this.startActivity(i);
 			}
 		});
@@ -50,8 +55,8 @@ public class GameActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				Intent i = new Intent(GameActivity.this, DirectionsMapActivity.class);
-				i.putExtra("LOCATION_LAT", GAME_LOCATION_LAT);
-				i.putExtra("LOCATION_LNG", GAME_LOCATION_LNG);
+				i.putExtra("GAME_DETAILS_LAT", GAME_DETAILS_LAT);
+				i.putExtra("GAME_DETAILS_LNG", GAME_DETAILS_LNG);
 				GameActivity.this.startActivity(i);
 			}
 		});
@@ -62,14 +67,10 @@ public class GameActivity extends Activity {
 	
 	private void buildGameFromIntent() {
 		Intent intent = getIntent();
-		String extra = intent.getStringExtra("JSON");
+		String extra = intent.getStringExtra("GAME_DETAILS");
 		
 		JSONObject o;
 		JSONArray a;
-		String team1 = null;
-		String team2 = null;
-		String city = null;
-		String stadium = null;
 		try {
 			a = new JSONArray(extra);
 			o = a.getJSONObject(0);
@@ -89,22 +90,22 @@ public class GameActivity extends Activity {
 		mCity.setText("Cidade: " + city);
 		mStadium.setText("Local: " + stadium);
 		
-
 		/* Temporary code for testing */
-		LatLng GAME_LATLNG = new LatLng(53.558, 9.927);
-		if (map != null){
-			map.addMarker(new MarkerOptions()
-				.position(GAME_LATLNG)
-				.title("Game")
-				.snippet(""));
-		}
+		LatLng GAME_LATLNG = new LatLng(-23.545531, -46.473373);
 		/* ************************** */
 		
-		GAME_LOCATION_LAT = GAME_LATLNG.latitude; 
-		GAME_LOCATION_LNG = GAME_LATLNG.longitude;
+		GAME_DETAILS_LAT = GAME_LATLNG.latitude; 
+		GAME_DETAILS_LNG = GAME_LATLNG.longitude;
+
+		if (map != null) {
+			map.addMarker(new MarkerOptions()
+				.position(GAME_LATLNG)
+				.title(team1 + " × " + team2)
+				.snippet(stadium + " – " + city));
+		}
 		
-		map.moveCamera(CameraUpdateFactory.newLatLngZoom(GAME_LATLNG, 10));
-		map.animateCamera(CameraUpdateFactory.newLatLngZoom(GAME_LATLNG, 11), 2000, null);
+		map.moveCamera(CameraUpdateFactory.newLatLngZoom(GAME_LATLNG, 13));
+		map.animateCamera(CameraUpdateFactory.newLatLngZoom(GAME_LATLNG, 14), 1000, null);
 		
 	}
 	
