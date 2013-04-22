@@ -15,10 +15,12 @@ int attr zOrderOnTop 0x7f01000d
 int color darker_bg_holo_light 0x7f060000
 int dimen activity_horizontal_margin 0x7f070000
 int dimen activity_vertical_margin 0x7f070001
-int drawable ic_launcher 0x7f020000
-int drawable ic_menu_search_holo_dark 0x7f020001
-int drawable ic_menu_search_holo_light 0x7f020002
-int drawable item_box 0x7f020003
+int drawable facebook 0x7f020000
+int drawable gplus 0x7f020001
+int drawable ic_launcher 0x7f020002
+int drawable ic_menu_search_holo_dark 0x7f020003
+int drawable item_box 0x7f020004
+int drawable twitter 0x7f020005
 int id action_reload 0x7f040015
 int id action_search 0x7f040014
 int id action_settings 0x7f040013

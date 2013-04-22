@@ -24,41 +24,41 @@
         android:layout_marginTop="6dp"
         android:layout_marginBottom="12dp"
         android:orientation="horizontal" >
-    	<Button android:id="@+id/facebook_button"
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:padding="10dp"
-	        android:layout_weight="1"
-	        android:singleLine="true"
-	   		android:background="@drawable/item_box"
-	        android:text="@string/facebook_button"
-            android:textColor="#777" />
-    	<LinearLayout
-    	    android:layout_width="2dp"
-            android:layout_height="fill_parent"
-    	    android:background="@color/darker_bg_holo_light" />
-	    <Button android:id="@+id/twitter_button"
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:padding="10dp"
-	        android:layout_weight="1"
-	        android:singleLine="true"
-	   		android:background="@drawable/item_box"
-	        android:text="@string/twitter_button"
-            android:textColor="#777" />
         <LinearLayout
-            android:layout_width="2dp"
+            android:layout_width="fill_parent"
             android:layout_height="fill_parent"
+            android:layout_weight="1"
             android:background="@color/darker_bg_holo_light" />
-	    <Button android:id="@+id/gplus_button"
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:padding="10dp"
-	        android:layout_weight="1"
-	        android:singleLine="true"
-	   		android:background="@drawable/item_box"
-	        android:text="@string/gplus_button"
-            android:textColor="#777" />
+        <ImageButton android:id="@+id/facebook_button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/facebook"
+            android:contentDescription="@string/facebook_button" />
+    	<LinearLayout
+    	    android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+    	    android:background="@color/darker_bg_holo_light" />
+        <ImageButton android:id="@+id/twitter_button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/twitter"
+            android:contentDescription="@string/twitter_button" />
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@color/darker_bg_holo_light" />
+	    <ImageButton android:id="@+id/gplus_button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/gplus"
+            android:contentDescription="@string/gplus_button" />
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@color/darker_bg_holo_light" />
 	</LinearLayout>
     
     <include android:id="@+id/list_item"
