@@ -5,7 +5,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.ComponentName;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.Menu;
@@ -32,7 +37,7 @@ public class GameActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_game);
 	    
-		map = ((MapFragment) getFragmentManager().findFragmentById(R.id.game_map)).getMap();
+		checkGoogleMapsApp();
 		
 		buildGameFromIntent();
 		
@@ -55,10 +60,11 @@ public class GameActivity extends Activity {
 		directions_map.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent i = new Intent(GameActivity.this, DirectionsMapActivity.class);
-				i.putExtra("GAME_DETAILS_LAT", GAME_DETAILS_LAT);
-				i.putExtra("GAME_DETAILS_LNG", GAME_DETAILS_LNG);
-				GameActivity.this.startActivity(i);
+				Intent i = new Intent(Intent.ACTION_VIEW,
+						Uri.parse("http://maps.google.com/maps?f=d&daddr=" + GAME_DETAILS_LAT + "," + GAME_DETAILS_LNG));
+				i.setComponent(new ComponentName("com.google.android.apps.maps",
+					    "com.google.android.maps.MapsActivity"));
+				startActivity(i);
 			}
 		});
 	
@@ -110,6 +116,46 @@ public class GameActivity extends Activity {
 		
 	}
 	
+	
+	private void checkGoogleMapsApp() {
+		boolean maps_installed;
+		
+	    try {
+	        getPackageManager().getApplicationInfo("com.google.android.apps.maps", 0 );
+	        maps_installed = true;
+	    } catch (PackageManager.NameNotFoundException e) {
+	    	maps_installed = false;
+	    }
+	    
+	    // Do a null check to confirm that the map is not instantiated.
+	    if (map == null) {
+	        map = ((MapFragment) getFragmentManager().findFragmentById(R.id.game_map)).getMap();
+
+	        if (!maps_installed) {
+	            AlertDialog.Builder d = new AlertDialog.Builder(this);
+	            d.setMessage("Install Google Maps to view location and get directions to stadiums!\n Please, click below to download and install from Google Play.");
+	            d.setCancelable(false);
+	            d.setPositiveButton("Install", new DialogInterface.OnClickListener() {
+	    	        @Override
+	    	        public void onClick(DialogInterface dialog, int which) {
+	    	            Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.google.android.apps.maps"));
+	    	            startActivity(i);
+	    	            // Finish the activity to force re-check
+	    	            finish();
+	    	        }
+	            });
+	            d.setNegativeButton("No", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						Intent i = new Intent(GameActivity.this, MainActivity.class);
+						startActivity(i);
+					}
+				});
+	            AlertDialog dialog = d.create();
+	            dialog.show();
+	        }
+	    }
+	}
 	
 
 	@Override

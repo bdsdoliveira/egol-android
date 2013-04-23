@@ -2,10 +2,12 @@ package com.android.ehgol;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.Menu;
@@ -44,8 +46,14 @@ public class CheckMapActivity extends Activity {
 		directions_map.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent i = new Intent(CheckMapActivity.this, DirectionsMapActivity.class);
-				CheckMapActivity.this.startActivity(i);
+				Intent i = new Intent(Intent.ACTION_VIEW,
+						Uri.parse("http://maps.google.com/maps?f=d&daddr=" + GAME_DETAILS_LAT + "," + GAME_DETAILS_LNG));
+				i.setComponent(new ComponentName("com.google.android.apps.maps",
+					    "com.google.android.maps.MapsActivity"));
+				startActivity(i);
+
+	            // Finish the activity so the user goes back to the game activity instead
+	            finish();
 			}
 		});
 	}
