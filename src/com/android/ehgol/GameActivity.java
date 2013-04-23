@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -65,6 +66,32 @@ public class GameActivity extends Activity {
 				i.setComponent(new ComponentName("com.google.android.apps.maps",
 					    "com.google.android.maps.MapsActivity"));
 				startActivity(i);
+			}
+		});
+		
+		ImageButton facebook = (ImageButton) findViewById(R.id.facebook_button);
+		facebook.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent i = new Intent(Intent.ACTION_SEND);
+				i.setType("text/plain");
+		        i.putExtra(Intent.EXTRA_TEXT, "Test sharing");
+		        i.setPackage("com.facebook.katana");
+		        startActivity(i);
+		        // https://m.facebook.com/sharer.php?u=website_url&t=titleOfThePost
+			}
+		});
+		
+		ImageButton twitter = (ImageButton) findViewById(R.id.twitter_button);
+		facebook.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent i = new Intent(Intent.ACTION_SEND);
+				i.setType("text/plain");
+		        i.putExtra(Intent.EXTRA_TEXT, "Shares only a link, this text disappears  http://www.example.com");
+		        i.setComponent(new ComponentName("com.twitter.android",
+					    "com.twitter.android.PostActivity"));
+		        startActivity(i);
 			}
 		});
 	
@@ -133,7 +160,7 @@ public class GameActivity extends Activity {
 
 	        if (!maps_installed) {
 	            AlertDialog.Builder d = new AlertDialog.Builder(this);
-	            d.setMessage("Install Google Maps to view location and get directions to stadiums!\n Please, click below to download and install from Google Play.");
+	            d.setMessage("Install Google Maps to view location and get directions to stadiums!\n\nPlease, click below to download and install from Google Play.");
 	            d.setCancelable(false);
 	            d.setPositiveButton("Install", new DialogInterface.OnClickListener() {
 	    	        @Override

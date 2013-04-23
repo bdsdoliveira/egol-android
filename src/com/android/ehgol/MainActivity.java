@@ -99,20 +99,6 @@ public class MainActivity extends Activity implements OnQueryTextListener {
 		protected void onPostExecute(Void v) {
 			p.dismiss();
 			
-			/* Temporary code for offline testing */
-//			try {
-//				array = new JSONArray("[{\"city_\":\"São Paulo\",\"city_id\":1,\"date_and_time\":null,\"id\":3,\"latitude\":-23.545531,\"longitude\":-46.473373,\"score_team1\":4,\"score_team2\":7,\"stadium\":\"Arena de São Paulo\",\"stage_\":\"Eliminatória de Grupo\",\"stage_id\":1,\"team1_id\":1,\"team2_id\":2,\"team_1\":\"Brazil\",\"team_2\":\"Holland\"}," +                                                                         
-//									"{\"city_\":\"São Paulo\",\"city_id\":1,\"date_and_time\":null,\"id\":4,\"latitude\":-23.545531,\"longitude\":-46.473373,\"score_team1\":4,\"score_team2\":7,\"stadium\":\"Arena de São Paulo\",\"stage_\":\"Eliminatória de Grupo\",\"stage_id\":1,\"team1_id\":1,\"team2_id\":2,\"team_1\":\"Brazil\",\"team_2\":\"Holland\"}," + 
-//									"{\"city_\":\"São Paulo\",\"city_id\":1,\"date_and_time\":null,\"id\":5,\"latitude\":-23.545531,\"longitude\":-46.473373,\"score_team1\":8,\"score_team2\":6,\"stadium\":\"Arena de São Paulo\",\"stage_\":\"Eliminatória de Grupo\",\"stage_id\":1,\"team1_id\":1,\"team2_id\":2,\"team_1\":\"Brazil\",\"team_2\":\"Holland\"}," + 
-//									"{\"city_\":\"Rio de Janeiro\",\"city_id\":2,\"date_and_time\":null,\"id\":6,\"latitude\":-22.912167,\"longitude\":-43.230164,\"score_team1\":1,\"score_team2\":2,\"stadium\":\"Estádio do Maracanã\",\"stage_\":\"Quarta de Final\",\"stage_id\":3,\"team1_id\":2,\"team2_id\":1,\"team_1\":\"Holland\",\"team_2\":\"Brazil\"}," + 
-//									"{\"city_\":\"São Paulo\",\"city_id\":1,\"date_and_time\":null,\"id\":7,\"latitude\":-23.545531,\"longitude\":-46.473373,\"score_team1\":3,\"score_team2\":3,\"stadium\":\"Arena de São Paulo\",\"stage_\":\"Semifinal\",\"stage_id\":4,\"team1_id\":1,\"team2_id\":2,\"team_1\":\"Brazil\",\"team_2\":\"Holland\"}," + 
-//									"{\"city_\":\"São Paulo\",\"city_id\":1,\"date_and_time\":null,\"id\":1,\"latitude\":-23.545531,\"longitude\":-46.473373,\"score_team1\":0,\"score_team2\":0,\"stadium\":\"Arena de São Paulo\",\"stage_\":\"Semifinal\",\"stage_id\":4,\"team1_id\":2,\"team2_id\":1,\"team_1\":\"Holland\",\"team_2\":\"Brazil\"}," + 
-//									"{\"city_\":\"São Paulo\",\"city_id\":1,\"date_and_time\":null,\"id\":2,\"latitude\":-23.545531,\"longitude\":-46.473373,\"score_team1\":0,\"score_team2\":1,\"stadium\":\"Arena de São Paulo\",\"stage_\":\"Eliminatória de Grupo\",\"stage_id\":1,\"team1_id\":2,\"team2_id\":1,\"team_1\":\"Holland\",\"team_2\":\"Brazil\"}]");
-//			} catch (JSONException e) {
-//				e.printStackTrace();
-//			}
-			/* ********************************** */
-			
 			if (array != null) {
 		        gamesListAdapter = new GamesListAdapter(array);
 				games_list.setAdapter(gamesListAdapter);
