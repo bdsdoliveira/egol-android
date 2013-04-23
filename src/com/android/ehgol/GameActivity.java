@@ -25,6 +25,7 @@ public class GameActivity extends Activity {
 	GoogleMap map;
 	double GAME_DETAILS_LAT, GAME_DETAILS_LNG;
 	String team1, team2, city, stadium;
+	float latitude, longitude;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -74,10 +75,12 @@ public class GameActivity extends Activity {
 		try {
 			a = new JSONArray(extra);
 			o = a.getJSONObject(0);
-			team1 = o.getString("team1").toString();
-			team2 = o.getString("team2").toString();
-			city = o.getString("city").toString();
-			stadium = o.getString("stadium").toString();
+			team1 = o.getString("team_1");
+			team2 = o.getString("team_2");
+			city = o.getString("city_");
+			stadium = o.getString("stadium");
+			latitude = Float.parseFloat(o.getString("latitude"));
+			longitude = Float.parseFloat(o.getString("longitude"));
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -90,9 +93,7 @@ public class GameActivity extends Activity {
 		mCity.setText("Cidade: " + city);
 		mStadium.setText("Local: " + stadium);
 		
-		/* Temporary code for testing */
-		LatLng GAME_LATLNG = new LatLng(-23.545531, -46.473373);
-		/* ************************** */
+		LatLng GAME_LATLNG = new LatLng(latitude, longitude);
 		
 		GAME_DETAILS_LAT = GAME_LATLNG.latitude; 
 		GAME_DETAILS_LNG = GAME_LATLNG.longitude;

@@ -104,14 +104,13 @@ public class MainActivity extends Activity implements OnQueryTextListener {
 			
 			/* Temporary code for offline testing */
 			try {
-				array = new JSONArray("[{\"city\":\"São Paulo\",\"group\":\"Verde\",\"id\":1,\"stadium\":\"Arena de São Paulo\",\"team1\":\"A1\",\"team2\":\"A2\"}," +
-						"{\"city\":\"Rio de Janeiro\",\"group\":\"Verde\",\"id\":8,\"stadium\":\"Estádio do Maracanã\",\"team1\":\"A3\",\"team2\":\"A4\"}," +
-						"{\"city\":\"Salvador\",\"group\":\"Rosa\",\"id\":9,\"stadium\":\"Arena Fonte Nova\",\"team1\":\"B1\",\"team2\":\"B2\"}," +
-						"{\"city\":\"Cuiabá\",\"group\":\"Rosa\",\"id\":11,\"stadium\":\"Arena Pantanal\",\"team1\":\"B3\",\"team2\":\"B4\"}," +
-						"{\"city\":\"Belo Horizonte\",\"group\":\"Preto\",\"id\":12,\"stadium\":\"Estádio Mineirão\",\"team1\":\"C1\",\"team2\":\"C2\"}," +
-						"{\"city\":\"Recife\",\"group\":\"Preto\",\"id\":13,\"stadium\":\"Arena Pernambuco\",\"team1\":\"C3\",\"team2\":\"C4\"}," +
-						"{\"city\":\"Fortaleza\",\"group\":\"Azul\",\"id\":14,\"stadium\":\"Estádio Castelão\",\"team1\":\"D1\",\"team2\":\"D2\"}," +
-						"{\"city\":\"Manaus\",\"group\":\"Azul\",\"id\":15,\"stadium\":\"Arena Amazônia\",\"team1\":\"D3\",\"team2\":\"D4\"}]");
+				array = new JSONArray("[{\"city_\":\"São Paulo\",\"city_id\":1,\"date_and_time\":null,\"id\":3,\"latitude\":-23.545531,\"longitude\":-46.473373,\"score_team1\":4,\"score_team2\":7,\"stadium\":\"Arena de São Paulo\",\"stage_\":\"Eliminatória de Grupo\",\"stage_id\":1,\"team1_id\":1,\"team2_id\":2,\"team_1\":\"Brazil\",\"team_2\":\"Holland\"}," +                                                                         
+									"{\"city_\":\"São Paulo\",\"city_id\":1,\"date_and_time\":null,\"id\":4,\"latitude\":-23.545531,\"longitude\":-46.473373,\"score_team1\":4,\"score_team2\":7,\"stadium\":\"Arena de São Paulo\",\"stage_\":\"Eliminatória de Grupo\",\"stage_id\":1,\"team1_id\":1,\"team2_id\":2,\"team_1\":\"Brazil\",\"team_2\":\"Holland\"}," + 
+									"{\"city_\":\"São Paulo\",\"city_id\":1,\"date_and_time\":null,\"id\":5,\"latitude\":-23.545531,\"longitude\":-46.473373,\"score_team1\":8,\"score_team2\":6,\"stadium\":\"Arena de São Paulo\",\"stage_\":\"Eliminatória de Grupo\",\"stage_id\":1,\"team1_id\":1,\"team2_id\":2,\"team_1\":\"Brazil\",\"team_2\":\"Holland\"}," + 
+									"{\"city_\":\"Rio de Janeiro\",\"city_id\":2,\"date_and_time\":null,\"id\":6,\"latitude\":-22.912167,\"longitude\":-43.230164,\"score_team1\":1,\"score_team2\":2,\"stadium\":\"Estádio do Maracanã\",\"stage_\":\"Quarta de Final\",\"stage_id\":3,\"team1_id\":2,\"team2_id\":1,\"team_1\":\"Holland\",\"team_2\":\"Brazil\"}," + 
+									"{\"city_\":\"São Paulo\",\"city_id\":1,\"date_and_time\":null,\"id\":7,\"latitude\":-23.545531,\"longitude\":-46.473373,\"score_team1\":3,\"score_team2\":3,\"stadium\":\"Arena de São Paulo\",\"stage_\":\"Semifinal\",\"stage_id\":4,\"team1_id\":1,\"team2_id\":2,\"team_1\":\"Brazil\",\"team_2\":\"Holland\"}," + 
+									"{\"city_\":\"São Paulo\",\"city_id\":1,\"date_and_time\":null,\"id\":1,\"latitude\":-23.545531,\"longitude\":-46.473373,\"score_team1\":0,\"score_team2\":0,\"stadium\":\"Arena de São Paulo\",\"stage_\":\"Semifinal\",\"stage_id\":4,\"team1_id\":2,\"team2_id\":1,\"team_1\":\"Holland\",\"team_2\":\"Brazil\"}," + 
+									"{\"city_\":\"São Paulo\",\"city_id\":1,\"date_and_time\":null,\"id\":2,\"latitude\":-23.545531,\"longitude\":-46.473373,\"score_team1\":0,\"score_team2\":1,\"stadium\":\"Arena de São Paulo\",\"stage_\":\"Eliminatória de Grupo\",\"stage_id\":1,\"team1_id\":2,\"team2_id\":1,\"team_1\":\"Holland\",\"team_2\":\"Brazil\"}]");
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
@@ -170,10 +169,10 @@ public class MainActivity extends Activity implements OnQueryTextListener {
 			try {
 				a = new JSONArray(getItem(i));
 				o = a.getJSONObject(0);
-				team1 = o.getString("team1").toString();
-				team2 = o.getString("team2").toString();
-				city = o.getString("city").toString();
-				stadium = o.getString("stadium").toString();
+				team1 = o.getString("team_1");
+				team2 = o.getString("team_2");
+				city = o.getString("city_");
+				stadium = o.getString("stadium");
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
@@ -216,13 +215,13 @@ public class MainActivity extends Activity implements OnQueryTextListener {
 				try {
 					a = new JSONArray(getItem(i));
 					o = a.getJSONObject(0);
-					if (o.getString("team1").toLowerCase().contains(s) ||
-						o.getString("team2").toLowerCase().contains(s) ||
-						o.getString("city").toLowerCase().contains(s) ||
+					if (o.getString("team_1").toLowerCase().contains(s) ||
+						o.getString("team_2").toLowerCase().contains(s) ||
+						o.getString("city_").toLowerCase().contains(s) ||
 						o.getString("stadium").toLowerCase().contains(s) ||
-						o.getString("team1").toUpperCase().contains(s) ||
-						o.getString("team2").toUpperCase().contains(s) ||
-						o.getString("city").toUpperCase().contains(s) ||
+						o.getString("team_1").toUpperCase().contains(s) ||
+						o.getString("team_2").toUpperCase().contains(s) ||
+						o.getString("city_").toUpperCase().contains(s) ||
 						o.getString("stadium").toUpperCase().contains(s)) {
 						filtered.add("[" + o.toString() + "]");
 					}
