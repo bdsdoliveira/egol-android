@@ -83,12 +83,13 @@ public class GameActivity extends Activity {
 		});
 		
 		ImageButton twitter = (ImageButton) findViewById(R.id.twitter_button);
-		facebook.setOnClickListener(new OnClickListener() {
+		twitter.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				Intent i = new Intent(Intent.ACTION_SEND);
 				i.setType("text/plain");
-		        i.putExtra(Intent.EXTRA_TEXT, "Shares only a link, this text disappears  http://www.example.com");
+		        i.putExtra(Intent.EXTRA_TEXT, "Hey, I'll be at " + stadium +
+		        		" in " + city + " to watch the " + team1 + " × " + team2 + " match!");
 		        i.setComponent(new ComponentName("com.twitter.android",
 					    "com.twitter.android.PostActivity"));
 		        startActivity(i);
