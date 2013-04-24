@@ -26,10 +26,10 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.plus.PlusShare;
 
 public class GameActivity extends Activity {
 	GoogleMap map;
-	double GAME_DETAILS_LAT, GAME_DETAILS_LNG;
 	String team1, team2, city, stadium;
 	float latitude, longitude;
 	
@@ -47,8 +47,8 @@ public class GameActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				Intent i = new Intent(GameActivity.this, CheckMapActivity.class);
-				i.putExtra("GAME_DETAILS_LAT", GAME_DETAILS_LAT);
-				i.putExtra("GAME_DETAILS_LNG", GAME_DETAILS_LNG);
+				i.putExtra("GAME_DETAILS_LAT", latitude);
+				i.putExtra("GAME_DETAILS_LNG", longitude);
 				i.putExtra("GAME_DETAILS_TEAM1", team1);
 				i.putExtra("GAME_DETAILS_TEAM2", team2);
 				i.putExtra("GAME_DETAILS_CITY", city);
@@ -62,9 +62,8 @@ public class GameActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				Intent i = new Intent(Intent.ACTION_VIEW,
-						Uri.parse("http://maps.google.com/maps?f=d&daddr=" + GAME_DETAILS_LAT + "," + GAME_DETAILS_LNG));
-				i.setComponent(new ComponentName("com.google.android.apps.maps",
-					    "com.google.android.maps.MapsActivity"));
+						Uri.parse("http://maps.google.com/maps?f=d&daddr=" + latitude + "," + longitude))
+					.setComponent(new ComponentName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity"));
 				startActivity(i);
 			}
 		});
@@ -73,10 +72,10 @@ public class GameActivity extends Activity {
 		facebook.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent i = new Intent(Intent.ACTION_SEND);
-				i.setType("text/plain");
-		        i.putExtra(Intent.EXTRA_TEXT, "Test sharing");
-		        i.setPackage("com.facebook.katana");
+				Intent i = new Intent(Intent.ACTION_SEND)
+					.setType("text/plain")
+					.putExtra(Intent.EXTRA_TEXT, "Test sharing")
+					.setPackage("com.facebook.katana");
 		        startActivity(i);
 		        // https://m.facebook.com/sharer.php?u=website_url&t=titleOfThePost
 			}
@@ -86,16 +85,25 @@ public class GameActivity extends Activity {
 		twitter.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent i = new Intent(Intent.ACTION_SEND);
-				i.setType("text/plain");
-		        i.putExtra(Intent.EXTRA_TEXT, "Hey, I'll be at " + stadium +
-		        		" in " + city + " to watch the " + team1 + " × " + team2 + " match!");
-		        i.setComponent(new ComponentName("com.twitter.android",
-					    "com.twitter.android.PostActivity"));
+				Intent i = new Intent(Intent.ACTION_SEND)
+					.setType("text/plain")
+		        	.putExtra(Intent.EXTRA_TEXT, "Hey, I'll be at " + stadium + " in " + city + " to watch the " + team1 + " × " + team2 + " match!")
+		        	.setComponent(new ComponentName("com.twitter.android", "com.twitter.android.PostActivity"));
 		        startActivity(i);
 			}
 		});
 	
+		ImageButton gplus = (ImageButton) findViewById(R.id.gplus_button);
+		gplus.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				 Intent i = new PlusShare.Builder(GameActivity.this)
+		         	.setType("text/plain")
+		         	.setText("Hey, I'll be at " + stadium + " in " + city + " to watch the " + team1 + " × " + team2 + " match!")
+		         	.getIntent();
+				 startActivity(i);
+			}
+		});
 	}
 	
 	
@@ -129,9 +137,6 @@ public class GameActivity extends Activity {
 		
 		LatLng GAME_LATLNG = new LatLng(latitude, longitude);
 		
-		GAME_DETAILS_LAT = GAME_LATLNG.latitude; 
-		GAME_DETAILS_LNG = GAME_LATLNG.longitude;
-
 		if (map != null) {
 			map.addMarker(new MarkerOptions()
 				.position(GAME_LATLNG)
