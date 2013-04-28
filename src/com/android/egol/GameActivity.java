@@ -32,7 +32,7 @@ import com.google.android.gms.plus.PlusShare;
 public class GameActivity extends Activity {
 	GoogleMap map;
 	String team1, team2, city, stadium;
-	float latitude, longitude;
+	double latitude, longitude;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
