@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.android.ehgol"
+    package="com.android.egol"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -35,7 +35,7 @@
             android:value="AIzaSyBu1txKfClE0k4NR5xIOwSHE9OlqAJUK-o" />
         
         <activity
-            android:name="com.android.ehgol.MainActivity"
+            android:name="com.android.egol.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -43,22 +43,22 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.android.ehgol.GameActivity"
+            android:name="com.android.egol.GameActivity"
             android:label="@string/title_activity_game"
-            android:parentActivityName="com.android.ehgol.MainActivity" >
+            android:parentActivityName="com.android.egol.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.android.ehgol.MainActivity" />
         </activity>
         <activity
-            android:name="com.android.ehgol.CheckMapActivity"
+            android:name="com.android.egol.CheckMapActivity"
             android:label="@string/title_activity_check_map" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.android.ehgol.GameActivity" />
         </activity>
         <activity
-            android:name="com.android.ehgol.DirectionsMapActivity"
+            android:name="com.android.egol.DirectionsMapActivity"
             android:label="@string/title_activity_directions_map" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

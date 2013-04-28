@@ -1,4 +1,4 @@
-package com.android.ehgol;
+package com.android.egol;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -33,9 +33,10 @@ import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.android.egol.R;
 
 public class MainActivity extends Activity implements OnQueryTextListener {
-	private final String GET_URL = "https://raw.github.com/bruoliveir/ehgol/master/m";
+	private final String GET_URL = "https://raw.github.com/bruoliveir/egol-rails/master/public/m.json";
 	SearchView s;
 	ListView games_list;
 	GamesListAdapter gamesListAdapter;

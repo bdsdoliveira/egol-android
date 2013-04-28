@@ -1,4 +1,4 @@
-package com.android.ehgol;
+package com.android.egol;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -14,6 +14,7 @@ import android.provider.Settings;
 import android.view.Menu;
 import android.widget.Toast;
 
+import com.android.egol.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationChangeListener;

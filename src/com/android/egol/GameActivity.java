@@ -1,4 +1,4 @@
-package com.android.ehgol;
+package com.android.egol;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.android.egol.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
