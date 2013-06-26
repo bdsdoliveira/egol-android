@@ -21,7 +21,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.android.egol.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -38,9 +37,9 @@ public class GameActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_game);
-	    
+
 		checkGoogleMapsApp();
-		
+
 		buildGameFromIntent();
 		
 		Button check_map = (Button) findViewById(R.id.map_button);
@@ -118,12 +117,12 @@ public class GameActivity extends Activity {
 		try {
 			a = new JSONArray(extra);
 			o = a.getJSONObject(0);
-			team1 = o.getString("team_1");
-			team2 = o.getString("team_2");
-			city = o.getString("city_");
-			stadium = o.getString("stadium");
-			latitude = Float.parseFloat(o.getString("latitude"));
-			longitude = Float.parseFloat(o.getString("longitude"));
+			team1 = (o.getJSONObject("team1").getString("name") == "null") ? o.getJSONObject("team1").getString("code") : o.getJSONObject("team1").getString("name");
+			team2 = (o.getJSONObject("team2").getString("name") == "null") ? o.getJSONObject("team2").getString("code") : o.getJSONObject("team2").getString("name");
+			city = o.getJSONObject("city").getString("name");
+			stadium = o.getJSONObject("city").getString("stadium");
+			latitude = Float.parseFloat(o.getJSONObject("city").getString("latitude"));
+			longitude = Float.parseFloat(o.getJSONObject("city").getString("longitude"));
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -133,8 +132,8 @@ public class GameActivity extends Activity {
 		TextView mStadium = (TextView) findViewById(R.id.list_item_stadium);
 		
 		mTeams.setText(team1 + " × " + team2);
-		mCity.setText("Cidade: " + city);
-		mStadium.setText("Local: " + stadium);
+		mCity.setText("City: " + city);
+		mStadium.setText("Place: " + stadium);
 		
 		LatLng GAME_LATLNG = new LatLng(latitude, longitude);
 		

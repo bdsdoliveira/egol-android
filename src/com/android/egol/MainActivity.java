@@ -33,10 +33,10 @@ import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.android.egol.R;
 
 public class MainActivity extends Activity implements OnQueryTextListener {
-	private final String GET_URL = "https://raw.github.com/bruoliveir/egol-rails/master/public/m.json";
+	private final String GET_URL = "http://egol.herokuapp.com";
+    //private final String GET_URL = "http://192.168.0.12:3000";
 	SearchView s;
 	ListView games_list;
 	GamesListAdapter gamesListAdapter;
@@ -153,10 +153,10 @@ public class MainActivity extends Activity implements OnQueryTextListener {
 			try {
 				a = new JSONArray(getItem(i));
 				o = a.getJSONObject(0);
-				team1 = o.getString("team_1");
-				team2 = o.getString("team_2");
-				city = o.getString("city_");
-				stadium = o.getString("stadium");
+				team1 = (o.getJSONObject("team1").getString("name") == "null") ? o.getJSONObject("team1").getString("code") : o.getJSONObject("team1").getString("name");
+				team2 = (o.getJSONObject("team2").getString("name") == "null") ? o.getJSONObject("team2").getString("code") : o.getJSONObject("team2").getString("name");
+				city = o.getJSONObject("city").getString("name");
+				stadium = o.getJSONObject("city").getString("stadium");
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
@@ -171,14 +171,14 @@ public class MainActivity extends Activity implements OnQueryTextListener {
 			TextView mStadium = (TextView) v.findViewById(R.id.list_item_stadium);
 			
 			mTeams.setText(team1 + " × " + team2);
-			mCity.setText("Cidade: " + city);
-			mStadium.setText("Local: " + stadium);
+			mCity.setText("City: " + city);
+			mStadium.setText("Place: " + stadium);
 			
 			v.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					Intent intent = new Intent(MainActivity.this, GameActivity.class);
-					intent.putExtra("GAME_DETAILS", GamesListAdapter.this.getItem(i).toString());
+					intent.putExtra("GAME_DETAILS", GamesListAdapter.this.getItem(i));
 					startActivity(intent);
 				}
 			});
@@ -199,14 +199,22 @@ public class MainActivity extends Activity implements OnQueryTextListener {
 				try {
 					a = new JSONArray(getItem(i));
 					o = a.getJSONObject(0);
-					if (o.getString("team_1").toLowerCase().contains(s) ||
-						o.getString("team_2").toLowerCase().contains(s) ||
-						o.getString("city_").toLowerCase().contains(s) ||
-						o.getString("stadium").toLowerCase().contains(s) ||
-						o.getString("team_1").toUpperCase().contains(s) ||
-						o.getString("team_2").toUpperCase().contains(s) ||
-						o.getString("city_").toUpperCase().contains(s) ||
-						o.getString("stadium").toUpperCase().contains(s)) {
+					if (o.getJSONObject("team1").getString("name").toLowerCase().contains(s) ||
+						o.getJSONObject("team2").getString("name").toLowerCase().contains(s) ||
+						o.getJSONObject("team1").getString("code").toLowerCase().contains(s) ||
+						o.getJSONObject("team2").getString("code").toLowerCase().contains(s) ||
+						o.getJSONObject("city").getString("name").toLowerCase().contains(s) ||
+						o.getJSONObject("city").getString("stadium").toLowerCase().contains(s) ||
+						o.getJSONObject("team1").getString("name").toUpperCase().contains(s) ||
+						o.getJSONObject("team1").getString("name").toUpperCase().contains(s) ||
+						o.getJSONObject("city").getString("name").toUpperCase().contains(s) ||
+						o.getJSONObject("city").getString("stadium").toUpperCase().contains(s) ||
+						o.getJSONObject("team1").getString("name").contains(s) ||
+						o.getJSONObject("team1").getString("name").contains(s) ||
+						o.getJSONObject("city").getString("name").contains(s) ||
+						o.getJSONObject("city").getString("stadium").contains(s) ||
+						o.getJSONObject("team2").getString("code").contains(s) ||
+						o.getJSONObject("team2").getString("code").contains(s)) {
 						filtered.add("[" + o.toString() + "]");
 					}
 				} catch (JSONException e) {
