@@ -1,9 +1,5 @@
 package com.android.egol;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ComponentName;
@@ -28,32 +24,36 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.plus.PlusShare;
 
-public class GameActivity extends Activity {
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+public class MatchActivity extends Activity {
 	GoogleMap map;
-	String team1, team2, city, stadium;
+	String team1, team2, date, city, stadium, stage;
 	double latitude, longitude;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_game);
+		setContentView(R.layout.activity_match);
 
 		checkGoogleMapsApp();
 
-		buildGameFromIntent();
+		buildMatchFromIntent();
 		
 		Button check_map = (Button) findViewById(R.id.map_button);
 		check_map.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent i = new Intent(GameActivity.this, CheckMapActivity.class);
-				i.putExtra("GAME_DETAILS_LAT", latitude);
-				i.putExtra("GAME_DETAILS_LNG", longitude);
-				i.putExtra("GAME_DETAILS_TEAM1", team1);
-				i.putExtra("GAME_DETAILS_TEAM2", team2);
-				i.putExtra("GAME_DETAILS_CITY", city);
-				i.putExtra("GAME_DETAILS_STADIUM", stadium);
-				GameActivity.this.startActivity(i);
+				Intent i = new Intent(MatchActivity.this, CheckMapActivity.class);
+				i.putExtra("MATCH_DETAILS_LAT", latitude);
+				i.putExtra("MATCH_DETAILS_LNG", longitude);
+				i.putExtra("MATCH_DETAILS_TEAM1", team1);
+				i.putExtra("MATCH_DETAILS_TEAM2", team2);
+				i.putExtra("MATCH_DETAILS_CITY", city);
+				i.putExtra("MATCH_DETAILS_STADIUM", stadium);
+				MatchActivity.this.startActivity(i);
 			}
 		});
 		
@@ -97,7 +97,7 @@ public class GameActivity extends Activity {
 		gplus.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				 Intent i = new PlusShare.Builder(GameActivity.this)
+				 Intent i = new PlusShare.Builder(MatchActivity.this)
 		         	.setType("text/plain")
 		         	.setText("Hey, I'll be at " + stadium + " in " + city + " to watch the " + team1 + " × " + team2 + " match!")
 		         	.getIntent();
@@ -108,9 +108,9 @@ public class GameActivity extends Activity {
 	
 	
 	
-	private void buildGameFromIntent() {
+	private void buildMatchFromIntent() {
 		Intent intent = getIntent();
-		String extra = intent.getStringExtra("GAME_DETAILS");
+		String extra = intent.getStringExtra("MATCH_DETAILS");
 		
 		JSONObject o;
 		JSONArray a;
@@ -119,8 +119,10 @@ public class GameActivity extends Activity {
 			o = a.getJSONObject(0);
 			team1 = (o.getJSONObject("team1").getString("name") == "null") ? o.getJSONObject("team1").getString("code") : o.getJSONObject("team1").getString("name");
 			team2 = (o.getJSONObject("team2").getString("name") == "null") ? o.getJSONObject("team2").getString("code") : o.getJSONObject("team2").getString("name");
+            date = o.getString("date_and_time");
 			city = o.getJSONObject("city").getString("name");
 			stadium = o.getJSONObject("city").getString("stadium");
+            stage = o.getJSONObject("stage").getString("name");
 			latitude = Float.parseFloat(o.getJSONObject("city").getString("latitude"));
 			longitude = Float.parseFloat(o.getJSONObject("city").getString("longitude"));
 		} catch (JSONException e) {
@@ -128,24 +130,28 @@ public class GameActivity extends Activity {
 		}
 		
 		TextView mTeams = (TextView) findViewById(R.id.list_item_teams);
+        TextView mDate = (TextView) findViewById(R.id.list_item_date);
 		TextView mCity = (TextView) findViewById(R.id.list_item_city);
 		TextView mStadium = (TextView) findViewById(R.id.list_item_stadium);
+        TextView mStage = (TextView) findViewById(R.id.list_item_stage);
 		
 		mTeams.setText(team1 + " × " + team2);
+        mDate.setText("Date: " + date);
 		mCity.setText("City: " + city);
 		mStadium.setText("Place: " + stadium);
+        mStage.setText("Stage: " + stage);
 		
-		LatLng GAME_LATLNG = new LatLng(latitude, longitude);
+		LatLng MATCH_LATLNG = new LatLng(latitude, longitude);
 		
 		if (map != null) {
 			map.addMarker(new MarkerOptions()
-				.position(GAME_LATLNG)
+				.position(MATCH_LATLNG)
 				.title(team1 + " × " + team2)
 				.snippet(stadium + " – " + city));
 		}
 		
-		map.moveCamera(CameraUpdateFactory.newLatLngZoom(GAME_LATLNG, 13));
-		map.animateCamera(CameraUpdateFactory.newLatLngZoom(GAME_LATLNG, 14), 1000, null);
+		map.moveCamera(CameraUpdateFactory.newLatLngZoom(MATCH_LATLNG, 13));
+		map.animateCamera(CameraUpdateFactory.newLatLngZoom(MATCH_LATLNG, 14), 1000, null);
 		
 	}
 	
@@ -162,7 +168,7 @@ public class GameActivity extends Activity {
 	    
 	    // Do a null check to confirm that the map is not instantiated.
 	    if (map == null) {
-	        map = ((MapFragment) getFragmentManager().findFragmentById(R.id.game_map)).getMap();
+	        map = ((MapFragment) getFragmentManager().findFragmentById(R.id.match_map)).getMap();
 
 	        if (!maps_installed) {
 	            AlertDialog.Builder d = new AlertDialog.Builder(this);
@@ -180,7 +186,7 @@ public class GameActivity extends Activity {
 	            d.setNegativeButton("No", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						Intent i = new Intent(GameActivity.this, MainActivity.class);
+						Intent i = new Intent(MatchActivity.this, MainActivity.class);
 						startActivity(i);
 					}
 				});
@@ -193,7 +199,7 @@ public class GameActivity extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.menu_game, menu);
+		getMenuInflater().inflate(R.menu.menu_match, menu);
 		return true;
 	}
 

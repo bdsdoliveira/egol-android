@@ -1,19 +1,5 @@
 package com.android.egol;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.HttpConnectionParams;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -34,27 +20,41 @@ import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.HttpConnectionParams;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends Activity implements OnQueryTextListener {
 	private final String GET_URL = "http://egol.herokuapp.com";
     //private final String GET_URL = "http://192.168.0.12:3000";
 	SearchView s;
-	ListView games_list;
-	GamesListAdapter gamesListAdapter;
+	ListView matches_list;
+	MatchesListAdapter matchesListAdapter;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        games_list = (ListView) findViewById(R.id.games_list);
-        games_list.setTextFilterEnabled(true);
+        matches_list = (ListView) findViewById(R.id.matches_list);
+        matches_list.setTextFilterEnabled(true);
 
-		GetGamesTask getGames = new GetGamesTask();
-		getGames.execute();
+		GetMatchesTask getMatches = new GetMatchesTask();
+		getMatches.execute();
     }
     
     
-    public class GetGamesTask extends AsyncTask<String, Void, Void> {
+    public class GetMatchesTask extends AsyncTask<String, Void, Void> {
     	private ProgressDialog p = new ProgressDialog(MainActivity.this);
 		StringBuilder sb = new StringBuilder();
 		JSONArray array;
@@ -64,7 +64,7 @@ public class MainActivity extends Activity implements OnQueryTextListener {
     	protected void onPreExecute() {
 			p.setCancelable(false);
 			p.setCanceledOnTouchOutside(false);
-			p.setMessage("Getting games...");
+			p.setMessage("Getting matches...");
 			p.show();
 		}
 		
@@ -101,20 +101,20 @@ public class MainActivity extends Activity implements OnQueryTextListener {
 			p.dismiss();
 			
 			if (array != null) {
-		        gamesListAdapter = new GamesListAdapter(array);
-				games_list.setAdapter(gamesListAdapter);
-				Toast.makeText(getApplicationContext(), "Games loaded.", Toast.LENGTH_SHORT).show();
+		        matchesListAdapter = new MatchesListAdapter(array);
+				matches_list.setAdapter(matchesListAdapter);
+				Toast.makeText(getApplicationContext(), "Matches loaded.", Toast.LENGTH_SHORT).show();
 			} else Toast.makeText(getApplicationContext(), "Failed: error " + status, Toast.LENGTH_SHORT).show();
 		}
     }
     
     
     
-    private class GamesListAdapter extends BaseAdapter {
+    private class MatchesListAdapter extends BaseAdapter {
     	private List<String> items = new ArrayList<String>();
     	private List<String> items_showing = new ArrayList<String>();
     	
-    	GamesListAdapter(JSONArray array) {
+    	MatchesListAdapter(JSONArray array) {
     		for (int i = 0; i < array.length(); i++) {
     			try {
     				items.add("[" + array.getJSONObject(i).toString() + "]");
@@ -147,16 +147,20 @@ public class MainActivity extends Activity implements OnQueryTextListener {
 			JSONArray a;
 			String team1 = null;
 			String team2 = null;
+            String date = null;
 			String city = null;
 			String stadium = null;
+            String stage = null;
 			
 			try {
 				a = new JSONArray(getItem(i));
 				o = a.getJSONObject(0);
 				team1 = (o.getJSONObject("team1").getString("name") == "null") ? o.getJSONObject("team1").getString("code") : o.getJSONObject("team1").getString("name");
 				team2 = (o.getJSONObject("team2").getString("name") == "null") ? o.getJSONObject("team2").getString("code") : o.getJSONObject("team2").getString("name");
+                date = o.getString("date_and_time");
 				city = o.getJSONObject("city").getString("name");
 				stadium = o.getJSONObject("city").getString("stadium");
+                stage = o.getJSONObject("stage").getString("name");
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
@@ -167,18 +171,22 @@ public class MainActivity extends Activity implements OnQueryTextListener {
 			}
 
 			TextView mTeams = (TextView) v.findViewById(R.id.list_item_teams);
+            TextView mDate = (TextView) v.findViewById(R.id.list_item_date);
 			TextView mCity = (TextView) v.findViewById(R.id.list_item_city);
 			TextView mStadium = (TextView) v.findViewById(R.id.list_item_stadium);
+            TextView mStage = (TextView) v.findViewById(R.id.list_item_stage);
 			
 			mTeams.setText(team1 + " × " + team2);
+            mDate.setText("Date: " + date);
 			mCity.setText("City: " + city);
 			mStadium.setText("Place: " + stadium);
+            mStage.setText("Stage: " + stage);
 			
 			v.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					Intent intent = new Intent(MainActivity.this, GameActivity.class);
-					intent.putExtra("GAME_DETAILS", GamesListAdapter.this.getItem(i));
+					Intent intent = new Intent(MainActivity.this, MatchActivity.class);
+					intent.putExtra("MATCH_DETAILS", MatchesListAdapter.this.getItem(i));
 					startActivity(intent);
 				}
 			});
@@ -194,7 +202,7 @@ public class MainActivity extends Activity implements OnQueryTextListener {
 			// Reset items to original values
 			items_showing = items;
 
-			// Search in each game inside its details
+			// Search in each match inside its details
 			for (int i = 0; i < this.items_showing.size(); i++) {
 				try {
 					a = new JSONArray(getItem(i));
@@ -247,14 +255,14 @@ public class MainActivity extends Activity implements OnQueryTextListener {
 				return true;
 			}
 		});
-        s.setQueryHint("Search for games");
+        s.setQueryHint("Search for matches");
         s.setOnQueryTextListener(this);
         
         return true;
     }
 
     public boolean onQueryTextChange(String query) {
-    	gamesListAdapter.filterSearch(query);
+    	matchesListAdapter.filterSearch(query);
         return true;
     }
  
@@ -270,8 +278,8 @@ public class MainActivity extends Activity implements OnQueryTextListener {
     public boolean onOptionsItemSelected(MenuItem item) {
     	switch (item.getItemId()) {
     	case R.id.action_reload:
-    		GetGamesTask getGames = new GetGamesTask();
-    		getGames.execute();
+    		GetMatchesTask getMatches = new GetMatchesTask();
+    		getMatches.execute();
     		break;
     	case R.id.action_settings:
     		Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show();

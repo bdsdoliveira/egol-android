@@ -6,7 +6,7 @@
     android:padding="12dp"
     tools:context=".MainActivity" >
         
-    <ListView android:id="@+id/games_list"
+    <ListView android:id="@+id/matches_list"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:divider="@android:color/transparent"

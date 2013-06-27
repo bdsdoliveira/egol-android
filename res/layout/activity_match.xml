@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="12dp"
-    tools:context=".GameActivity" >
+    tools:context=".MatchActivity" >
     
     <Button android:id="@+id/comment_button"
         android:layout_width="fill_parent"
@@ -17,7 +17,7 @@
         android:text="@string/comment_button"
         android:textColor="#777" />
     
-	<LinearLayout android:id="@+id/game_share"
+	<LinearLayout android:id="@+id/match_share"
        	android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/comment_button"
@@ -61,8 +61,8 @@
             android:background="@color/darker_bg_holo_light" />
 	</LinearLayout>
     
-    <include android:id="@+id/list_item"
-        layout="@layout/list_item"
+    <include android:id="@+id/list_item_match"
+        layout="@layout/list_item_match"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="6dp" />
@@ -70,11 +70,11 @@
     <RelativeLayout 
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@id/list_item"
-        android:layout_above="@id/game_share"
+        android:layout_below="@id/list_item_match"
+        android:layout_above="@id/match_share"
         android:layout_marginTop="6dp"
         android:layout_marginBottom="6dp" >
-		<LinearLayout android:id="@+id/game_map_actions"
+		<LinearLayout android:id="@+id/match_map_actions"
         	android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
 	        android:layout_alignParentBottom="true"
@@ -102,11 +102,11 @@
 		        android:text="@string/directions_button"
                 android:textColor="#777" />
 		</LinearLayout>
-	    <fragment android:id="@+id/game_map"
+	    <fragment android:id="@+id/match_map"
 	        android:name="com.google.android.gms.maps.MapFragment"
 	        android:layout_width="fill_parent"
 	        android:layout_height="fill_parent"
-        	android:layout_above="@id/game_map_actions" />
+        	android:layout_above="@id/match_map_actions" />
     </RelativeLayout>
     
 </RelativeLayout>

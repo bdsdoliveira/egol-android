@@ -12,7 +12,7 @@
         android:singleLine="true"
    		android:background="@drawable/item_box"
         android:text="@string/directions_button" />
-    <fragment android:id="@+id/game_map"
+    <fragment android:id="@+id/match_map"
         android:name="com.google.android.gms.maps.MapFragment"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"

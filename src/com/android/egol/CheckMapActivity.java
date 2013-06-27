@@ -10,11 +10,13 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.v4.app.NavUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-import com.android.egol.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -24,7 +26,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class CheckMapActivity extends Activity {
 	private LocationManager l;
 	GoogleMap map;
-	double GAME_DETAILS_LAT, GAME_DETAILS_LNG;
+	double MATCH_DETAILS_LAT, MATCH_DETAILS_LNG;
 	String team1, team2, city, stadium;
 
 	@Override
@@ -34,7 +36,7 @@ public class CheckMapActivity extends Activity {
 
 		l = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		
-		map = ((MapFragment) getFragmentManager().findFragmentById(R.id.game_map)).getMap();
+		map = ((MapFragment) getFragmentManager().findFragmentById(R.id.match_map)).getMap();
 		
 		checkGPSEnabled();
 		
@@ -47,12 +49,12 @@ public class CheckMapActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				Intent i = new Intent(Intent.ACTION_VIEW,
-						Uri.parse("http://maps.google.com/maps?f=d&daddr=" + GAME_DETAILS_LAT + "," + GAME_DETAILS_LNG));
+						Uri.parse("http://maps.google.com/maps?f=d&daddr=" + MATCH_DETAILS_LAT + "," + MATCH_DETAILS_LNG));
 				i.setComponent(new ComponentName("com.google.android.apps.maps",
 					    "com.google.android.maps.MapsActivity"));
 				startActivity(i);
 
-	            // Finish the activity so the user goes back to the game activity instead
+	            // Finish the activity so the user goes back to the match activity instead
 	            finish();
 			}
 		});
@@ -60,24 +62,24 @@ public class CheckMapActivity extends Activity {
 
 	private void buildMapFromIntent() {
 		Intent i = getIntent();
-		LatLng GAME_LATLNG = new LatLng(i.getDoubleExtra("GAME_DETAILS_LAT", 0), i.getDoubleExtra("GAME_DETAILS_LNG", 0));
-		String team1 = i.getStringExtra("GAME_DETAILS_TEAM1");
-		String team2 = i.getStringExtra("GAME_DETAILS_TEAM2");
-		String city = i.getStringExtra("GAME_DETAILS_CITY");
-		String stadium = i.getStringExtra("GAME_DETAILS_STADIUM");
+		LatLng MATCH_LATLNG = new LatLng(i.getDoubleExtra("MATCH_DETAILS_LAT", 0), i.getDoubleExtra("MATCH_DETAILS_LNG", 0));
+		String team1 = i.getStringExtra("MATCH_DETAILS_TEAM1");
+		String team2 = i.getStringExtra("MATCH_DETAILS_TEAM2");
+		String city = i.getStringExtra("MATCH_DETAILS_CITY");
+		String stadium = i.getStringExtra("MATCH_DETAILS_STADIUM");
 
-		GAME_DETAILS_LAT = GAME_LATLNG.latitude; 
-		GAME_DETAILS_LNG = GAME_LATLNG.longitude;
+		MATCH_DETAILS_LAT = MATCH_LATLNG.latitude; 
+		MATCH_DETAILS_LNG = MATCH_LATLNG.longitude;
 		
 		if (map != null) {
 			map.addMarker(new MarkerOptions()
-				.position(GAME_LATLNG)
+				.position(MATCH_LATLNG)
 				.title(team1 + " × " + team2)
 				.snippet(stadium + " – " + city));
 		}
 		
-		map.moveCamera(CameraUpdateFactory.newLatLngZoom(GAME_LATLNG, 12));
-		map.animateCamera(CameraUpdateFactory.newLatLngZoom(GAME_LATLNG, 15), 1000, null);
+		map.moveCamera(CameraUpdateFactory.newLatLngZoom(MATCH_LATLNG, 12));
+		map.animateCamera(CameraUpdateFactory.newLatLngZoom(MATCH_LATLNG, 15), 1000, null);
 	}
 	
 
@@ -89,7 +91,7 @@ public class CheckMapActivity extends Activity {
 	 
 			a.setTitle("Enable GPS?");
 	 
-			a.setMessage("This application requires GPS to be enable for location features.")
+			a.setMessage("This application requires GPS to be enabled for location features.")
 				.setCancelable(false)
 				.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
 					@Override
@@ -111,4 +113,22 @@ public class CheckMapActivity extends Activity {
 		}
 	}
 	
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.menu_match, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			// This ID represents the Home or Up button.
+			NavUtils.navigateUpFromSameTask(this);
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
 }
